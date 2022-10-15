@@ -34,24 +34,18 @@ public class Reservation {
     // 예약 시간
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
     @PrePersist
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
     }
-
-    /**
-     * @ManyToOne(fetch = FetchType.LAZY)
-     * private Restaurant restraurant;
-     *
-     * @ManyToOne(fetch = FetchType.LAZY)
-     * private Member member;
-     */
-
-
-    /**
-     * @OneToOne
-     * private PaymentInfo paymentInfo;
-     */
 
     public ReservationResponse toResponse() {
         return ReservationResponse.builder()

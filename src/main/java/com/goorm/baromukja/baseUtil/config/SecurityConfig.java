@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().mvcMatchers(
@@ -53,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/swagger-ui/**",
 				"/webjars/**",
 				"/swagger/**",
+				"/h2-console/**",
 
 				"api/v1"
 		);
@@ -63,10 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.addFilterBefore(new BeforeSecurityFilter(), BasicAuthenticationFilter.class);
 		http.csrf().disable();
+		http.antMatcher("/h2-console/**").headers().frameOptions().disable();
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 세션 사용 안함
 				.and()
-				.addFilter(corsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
+				// .addFilter(corsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
 				.formLogin().disable() // Form login 안함
 				.httpBasic().disable()
 				.addFilter(jwtAuthenticationFilter())// 차단한 formLogin 대신 필터를 넣어준다. AuthenticationManager가 필요

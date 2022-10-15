@@ -1,6 +1,9 @@
 package com.goorm.baromukja.dto.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.goorm.baromukja.dto.member.MemberRes;
+import com.goorm.baromukja.entity.Member;
+import com.goorm.baromukja.entity.Restaurant;
 import lombok.Builder;
 import lombok.Data;
 
@@ -33,8 +36,14 @@ public class RestaurantResponse {
     // 테마
     private String theme;
 
+    private MemberRes memberRes;
+
     // 위치 정보
     // 이미지
     // 메뉴
-
+    public Restaurant toEntity() {
+        return Restaurant.builder()
+                .id(this.restaurantId)
+                .build();
+    }
 }

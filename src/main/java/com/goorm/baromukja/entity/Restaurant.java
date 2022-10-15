@@ -36,6 +36,11 @@ public class Restaurant {
     private int availableCount;
     // 쉬는 요일
     private String holiday;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     // 메뉴
     @OneToMany
     @JoinColumn

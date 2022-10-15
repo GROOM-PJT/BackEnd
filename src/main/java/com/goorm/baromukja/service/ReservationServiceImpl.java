@@ -6,6 +6,7 @@ import com.goorm.baromukja.dto.reservation.ReservationRequest;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
 import com.goorm.baromukja.entity.Reservation;
 import com.goorm.baromukja.repository.ReservationRepository;
+import com.goorm.baromukja.repository.queryDSL.ReservatioinRepositoryCustom;
 import com.goorm.baromukja.service.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservatioinRepositoryCustom reservatioinRepositoryCustom;
+    private final MemberService memberService;
+    private final RestaurantServiceImpl restaurantService;
 
     @Override
     public ReservationResponse findById(Long id) {
@@ -51,7 +55,19 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse save(ReservationRequest request) {
-        // 유저정보 받아와서 같이 처리
-        return reservationRepository.save(request.toEntity()).toResponse();
+        Reservation reservation = request.toEntity();
+        reservation.setMember(memberService.findByUsername(request.getUsername()).toEntity());
+        reservation.setRestaurant(restaurantService.findById(request.getRestaurantId()).toEntity());
+        return reservationRepository.save(reservation).toResponse();
+    }
+
+    @Override
+    public List<ReservationResponse> findAllByUsername(String username) {
+        return reservatioinRepositoryCustom.findAllByUsername(username);
+    }
+
+    @Override
+    public List<ReservationResponse> findAllByRestaurantId(Long restaurantId) {
+        return reservatioinRepositoryCustom.findAllByRestaurantId(restaurantId);
     }
 }

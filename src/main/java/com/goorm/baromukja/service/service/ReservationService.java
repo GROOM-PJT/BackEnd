@@ -19,6 +19,10 @@ public interface ReservationService {
 
     List<ReservationResponse> findAll();
 
+    List<ReservationResponse> findAllByUsername(String username);
+
+    List<ReservationResponse> findAllByRestaurantId(Long restaurantId);
+
     // List<ReservationResponse> findByMember(Long memberId);
     // List<ReservationResponse> findByRestaurant(Long restraurantId);
 }
