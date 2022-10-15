@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: aws
+cloud:
+  aws:
+    s3:
+      bucket: baromukja-image
+    region:
+      static: ap-northeast-2
+    tack:
+      auto: false
