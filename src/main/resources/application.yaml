@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: dev, kafka, local, pri
+    include: dev, kafka, local, pri, aws
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

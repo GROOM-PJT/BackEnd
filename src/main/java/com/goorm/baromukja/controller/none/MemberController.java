@@ -1,10 +1,10 @@
-package com.goorm.baromukja.controller;
+package com.goorm.baromukja.controller.none;
 
 import com.goorm.baromukja.baseUtil.config.service.JwtService;
 import com.goorm.baromukja.baseUtil.response.dto.CommonResponse;
 import com.goorm.baromukja.baseUtil.response.service.ResponseService;
-import com.goorm.baromukja.dto.member.LoginReq;
-import com.goorm.baromukja.dto.member.MemberSignupReq;
+import com.goorm.baromukja.dto.member.LoginRequest;
+import com.goorm.baromukja.dto.member.MemberSignupRequest;
 import com.goorm.baromukja.entity.MemberRole;
 import com.goorm.baromukja.service.MemberService;
 import io.swagger.annotations.Api;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "01. 회원")
 @CrossOrigin
@@ -33,31 +32,15 @@ public class MemberController {
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "이메일, 비밀번호를 이용하여 로그인")
     public void login(
-            @ApiParam(value = "로그인 객체", required = true) @RequestBody LoginReq loginReq) {
+            @ApiParam(value = "로그인 객체", required = true) @RequestBody LoginRequest loginReq) {
     }
-
-    @PostMapping("/logout")
-    @ApiOperation(value = "로그아웃", notes = "AccessToken & RefreshToken 헤더에 담아서 로그아웃 요청")
-    public CommonResponse logout(HttpServletRequest request) {
-        jwtService.logout(request);
-        return responseService.successResult();
-    }
-
-
-    @ApiOperation(value = "회원 등급 조회", notes = "회원 등급을 반환합니다.")
-    @GetMapping("/role")
-    public CommonResponse findMemberRole(HttpServletRequest httpServletRequest) {
-        String username = jwtService.decode(httpServletRequest.getHeader("Authorization"));
-        return responseService.singleResult(memberService.findByUsername(username).getRole());
-    }
-
 
 
     @ApiOperation(value = "회원 가입", notes = "아이디, 패스워드를 받아서 저장합니다.")
     @PostMapping
     public CommonResponse saveUserMember(
             @ApiParam(value = "회원 객체", required = true)
-            @RequestBody MemberSignupReq memberSignupReq) {
+            @RequestBody MemberSignupRequest memberSignupReq) {
         memberService.signUp(memberSignupReq, MemberRole.USER);
         return responseService.successResult();
     }
@@ -66,7 +49,7 @@ public class MemberController {
     @PostMapping("/admin")
     public CommonResponse saveAdminMember(
             @ApiParam(value = "Admin 회원 객체", required = true)
-            @RequestBody MemberSignupReq memberSignupReq) {
+            @RequestBody MemberSignupRequest memberSignupReq) {
         memberService.signUp(memberSignupReq, MemberRole.ADMIN);
         return responseService.successResult();
     }

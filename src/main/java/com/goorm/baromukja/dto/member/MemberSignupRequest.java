@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class MemberSignupReq {
+public class MemberSignupRequest {
 	@ApiModelProperty(required = true, value = "성함", example = "본명", position = 0)
 	private String realName;
 	@ApiModelProperty(required = true, value = "아이디", example = "memberId1", position = 1)

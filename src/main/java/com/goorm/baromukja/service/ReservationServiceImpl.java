@@ -11,6 +11,7 @@ import com.goorm.baromukja.service.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final RestaurantServiceImpl restaurantService;
 
     @Override
+    @Transactional(readOnly = true)
     public ReservationResponse findById(Long id) {
         log.info("reservation - findById: " + id);
         return reservationRepository.findById(id)
@@ -41,6 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReservationResponse> findAll() {
         return reservationRepository.findAll()
                 .stream().map(Reservation::toResponse)
@@ -48,25 +51,29 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void delete(Long reservationId) {
         // 헤더를 확인해서 요청한 사람이 해당 유저가 맞는지 확인
         reservationRepository.deleteById(reservationId);
     }
 
     @Override
+    @Transactional
     public ReservationResponse save(ReservationRequest request) {
         Reservation reservation = request.toEntity();
         reservation.setMember(memberService.findByUsername(request.getUsername()).toEntity());
-        reservation.setRestaurant(restaurantService.findById(request.getRestaurantId()).toEntity());
+        reservation.setRestaurant(restaurantService.findByIdDto(request.getRestaurantId()).toEntity());
         return reservationRepository.save(reservation).toResponse();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByUsername(String username) {
         return reservatioinRepositoryCustom.findAllByUsername(username);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByRestaurantId(Long restaurantId) {
         return reservatioinRepositoryCustom.findAllByRestaurantId(restaurantId);
     }

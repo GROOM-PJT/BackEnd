@@ -56,6 +56,8 @@ dependencies {
 			"javax.annotation:javax.annotation-api",
 			"com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
 
+	//AWS S3
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
 	// for jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'

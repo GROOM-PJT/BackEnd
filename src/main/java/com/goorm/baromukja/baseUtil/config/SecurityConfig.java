@@ -6,6 +6,7 @@ import com.goorm.baromukja.baseUtil.config.service.JwtService;
 import com.goorm.baromukja.baseUtil.exception.exceptionHandleClass.CustomAccessDeniedHandler;
 import com.goorm.baromukja.baseUtil.exception.exceptionHandleClass.CustomAuthenticationEntryPoint;
 import com.goorm.baromukja.baseUtil.filter.BeforeSecurityFilter;
+import com.goorm.baromukja.baseUtil.filter.MyFilter1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -53,10 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/swagger-resources/**",
 				"/swagger-ui/**",
 				"/webjars/**",
-				"/swagger/**",
-				"/h2-console/**",
-
-				"api/v1"
+				"/swagger/**"
 		);
 		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적인 리소스들에 대해서 시큐리티 적용 무시.
 	}
@@ -65,15 +63,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.addFilterBefore(new BeforeSecurityFilter(), BasicAuthenticationFilter.class);
 		http.csrf().disable();
-		http.antMatcher("/h2-console/**").headers().frameOptions().disable();
+
+		// h2-console 활용
+		http.headers().frameOptions().disable();
+
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 세션 사용 안함
 				.and()
-				// .addFilter(corsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
+				.addFilter(corsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
 				.formLogin().disable() // Form login 안함
 				.httpBasic().disable()
 				.addFilter(jwtAuthenticationFilter())// 차단한 formLogin 대신 필터를 넣어준다. AuthenticationManager가 필요
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtService)) // 권한이나 인증이 필요한 곳에서 불리는 JWT 검증 필터
+
+
 				.authorizeRequests()
 				// TODO : 추가적인 권한 체크 시 여기서 도메인 설정
 				// v1은 로그인 없이 확인 가능한 api

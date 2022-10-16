@@ -1,12 +1,11 @@
 package com.goorm.baromukja.entity;
 
-import com.goorm.baromukja.dto.restaurant.MenuDto;
+import com.goorm.baromukja.dto.Menu.MenuDto;
+import com.goorm.baromukja.dto.Menu.MenuResponse;
+import com.goorm.baromukja.dto.Menu.MenuResponseWithRestaurant;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -24,10 +23,37 @@ public class Menu {
 
     private int price;
 
-    public MenuDto toResponse() {
-        return MenuDto.builder()
+    private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    public MenuResponse toResponse() {
+        return MenuResponse.builder()
+                .id(this.id)
                 .foodName(this.foodName)
                 .price(this.price)
+                .imageUrl(this.imageUrl)
+                .build();
+    }
+
+    public MenuDto toDto() {
+        return MenuDto.builder()
+                .id(this.id)
+                .foodName(this.foodName)
+                .price(this.price)
+                .build();
+    }
+
+
+    public MenuResponseWithRestaurant toResponseWithRestaurant() {
+        return MenuResponseWithRestaurant.builder()
+                .id(this.id)
+                .foodName(this.foodName)
+                .price(this.price)
+                .imageUrl(this.imageUrl)
+                .restaurantResponseDetail(this.restaurant.toResponseDetail())
                 .build();
     }
 }

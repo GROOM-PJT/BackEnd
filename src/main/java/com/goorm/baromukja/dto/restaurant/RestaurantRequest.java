@@ -18,6 +18,7 @@ public class RestaurantRequest {
     // 테마
     private String theme;
     // 예약 가능 시간
+
     private LocalDateTime availableTime;
     // 섦명
     private String description;
@@ -25,8 +26,10 @@ public class RestaurantRequest {
     private LocalDateTime openTime;
     // 종료 시간
     private LocalDateTime closeTime;
-    //메뉴
-    private List<Menu> menu;
+    // 예약가능 인원
+    private int availableCount;
+    // 쉬는 요일
+    private String holiday;
 
     public Restaurant toEntity() {
         return Restaurant.builder()
@@ -36,6 +39,8 @@ public class RestaurantRequest {
                 .openTime(this.openTime)
                 .closeTime(this.closeTime)
                 .description(this.description)
+                .availableCount(this.availableCount)
+                .holiday(this.holiday)
                 .build();
     }
 }

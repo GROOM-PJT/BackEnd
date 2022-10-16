@@ -1,31 +1,21 @@
 package com.goorm.baromukja.dto.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.goorm.baromukja.dto.member.MemberRes;
-import com.goorm.baromukja.entity.Member;
+import com.goorm.baromukja.dto.member.MemberResponse;
 import com.goorm.baromukja.entity.Restaurant;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
+@Setter
 @Builder
 public class RestaurantResponse {
     // 식당 정보
-    private Long restaurantId;
-
-    //시작 시간
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private LocalDateTime openTime;
-
-    //종료 시간
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private LocalDateTime closeTime;
-
-    //예약 가능 시간
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private LocalDateTime availableTime;
+    private Long id;
 
     // 이름
     private String name;
@@ -36,14 +26,9 @@ public class RestaurantResponse {
     // 테마
     private String theme;
 
-    private MemberRes memberRes;
-
+    private String imageUrl;
     // 위치 정보
     // 이미지
     // 메뉴
-    public Restaurant toEntity() {
-        return Restaurant.builder()
-                .id(this.restaurantId)
-                .build();
-    }
+    // private List<MenuResponse> menuResponseList;
 }
