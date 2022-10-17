@@ -71,8 +71,8 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         steps {
-            sh "docker build -t ${dockerHubRegistry}:${currentBuild.number}"
-            sh "docker build -t ${dockerHubRegistry}:latest "
+            sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
+            sh "docker build . -t ${dockerHubRegistry}:latest "
         }
         post {
             failure {
