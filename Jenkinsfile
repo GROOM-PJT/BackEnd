@@ -155,9 +155,9 @@ pipeline {
                 ])
                 sshagent(credentials: ['github-credentia']){
                     sh("""
-                        #!/usr/bin/env bash
-                        set +x
-                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"                    
+                        echo "git test"
+                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
+                        echo "git ssh command"                    
                         git config --global user.email "jeeseob5761@gmail.com"
                         echo "git config"
                         git checkout main
