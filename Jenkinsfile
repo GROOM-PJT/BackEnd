@@ -149,8 +149,8 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""         
-    
-                    git config --global user.name "Jeeseob"
+                    git clone git@github.com:GROOM-PJT/gitOps.git
+
                     echo "git config"
                     git checkout main
                     echo "git checkout"
