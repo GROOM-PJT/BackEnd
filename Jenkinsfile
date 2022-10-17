@@ -98,7 +98,7 @@ pipeline {
         steps {
             script {
                     // sh "echo ${dockerHubRegistryCredential} | docker login -u ${dockerHubRegistryCredential} --password-stdin"
-                    sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+                    docker push ${dockerHubRegistry}:${currentBuild.number}
                     // docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
                     //     appImage.push("${currentBuild.number}")
                     //     appImage.push("latest")
