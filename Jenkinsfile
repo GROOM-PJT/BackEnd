@@ -71,8 +71,9 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         steps {
-            sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
-            sh "docker build . -t ${dockerHubRegistry}:latest "
+            dockerImage = docker.build(${dockerHubRegistry}:${currentBuild.number})
+            // sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
+            // sh "docker build . -t ${dockerHubRegistry}:latest "
         }
         post {
             failure {
@@ -96,7 +97,10 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+            withDockerRegistry([ credentialsId: "dockerhubaccount", url: "" ]) {
+                dockerImage.push()
+            }
+            // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
                     // sh "echo ${dockerHubRegistryCredential} | docker login -u ${dockerHubRegistryCredential} --password-stdin"
                     
