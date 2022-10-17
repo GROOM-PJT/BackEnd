@@ -156,6 +156,7 @@ pipeline {
                 cat deployment.yaml
                 git add deployment.yaml
                 git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                git config --global --add safe.directory /var/lib/jenkins/workspace/groom-backend
                 git push origin main
             """)
             //}
