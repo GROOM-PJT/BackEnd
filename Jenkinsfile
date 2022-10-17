@@ -132,7 +132,7 @@ pipeline {
             branch: 'main'
             script {
                 echo "test"
-                sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+                // sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 echo "test"
                 git add deployment.yaml
                 git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
