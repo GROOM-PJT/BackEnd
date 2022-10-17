@@ -3,7 +3,7 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/groom_beckend'
     dockerHubRegistryCredential = 'docker-credential'
-    DOCKERHUB_CREDENTIALS=credentials('dockerhub-cred-raja')
+    DOCKERHUB_CREDENTIALS=credentials('docker-credential')
   }
   stages {
     stage('Checkout Application Git Branch') {
