@@ -127,14 +127,13 @@ pipeline {
 
     stage('K8S Manifest Update') {
         steps {
-            withCredentials(credentials: ['github-credential']) {
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
             script {
                 git config --global user.name "Jeeseob"
                 git config --global user.eamil "jeeseob5761@gmail.com"
-                sed -i 's/groom_backend:*/groom_backend:${currentBuild.number}/g' deployment.yaml
+                sed -i 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 git add deployment.yaml
                 git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
                 git push -u origin main
