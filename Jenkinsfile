@@ -148,10 +148,8 @@ pipeline {
             branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
-                sh("""
-                    echo "git test"
-                    export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
-                    echo "git ssh command"                    
+                sh("""             
+                    git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     echo "git config"
