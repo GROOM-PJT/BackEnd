@@ -3,6 +3,7 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/gromm_beckend'
     dockerHubRegistryCredential = 'docker-credential'
+    githubCredential = 'github-credential'
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -156,8 +157,7 @@ pipeline {
                 cat deployment.yaml
                 git add deployment.yaml
                 git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
-                git config --global --add safe.directory /var/lib/jenkins/workspace/groom-backend
-                git push origin main
+                git push https://Jeeseob:${githubCredential}@github.com/GROOM-PJT/gitOps.git
             """)
             //}
 
