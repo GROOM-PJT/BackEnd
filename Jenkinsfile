@@ -148,8 +148,7 @@ pipeline {
             branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
-                sh("""
-                    cd gitOps             
+                sh("""         
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     echo "git config"
@@ -166,7 +165,7 @@ pipeline {
                     echo "add"
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     echo "commit"
-                    git push origin main
+                    git push
                     echo "push"
                 """)
             //}
