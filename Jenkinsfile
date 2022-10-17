@@ -5,7 +5,6 @@ pipeline {
     dockerHubRegistryCredential = 'docker-credential'
   }
   stages {
-
     stage('Checkout Application Git Branch') {
         steps {
            script {
@@ -159,5 +158,6 @@ pipeline {
             }
         }
     }
+}
 }
 
