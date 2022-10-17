@@ -148,12 +148,15 @@ pipeline {
             branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
-                sh("""             
+                sh("""
+                    git clone git@github.com:GROOM-PJT/gitOps.git
+                    cd gitOps             
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     echo "git config"
                     git checkout main
                     echo "git checkout"
+                    cat deployment.yaml
                     echo "test" > deployment.yaml
                     echo "kustomize"
                     cat deployment.yaml
