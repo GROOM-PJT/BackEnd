@@ -131,10 +131,10 @@ pipeline {
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
 
+            sh "git config --global user.name "Jeeseob""
+            sh "git config --global user.eamil "jeeseob5761@gmail.com""
             sh "sed -i \'s/groom_backend:*/groom_backend:${currentBuild.number}/g\' deployment.yaml"
             sh "git add deployment.yaml"
-            sh "git config --global user.name \"Jeeseob\""
-            sh "git config --global user.eamil \"jeeseob5761@gmail.com\""
             sh "git commit -m \'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning\'"
             sshagent(credentials: ['github-credential']) {
                 sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
