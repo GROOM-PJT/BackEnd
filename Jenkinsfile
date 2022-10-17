@@ -143,16 +143,14 @@ pipeline {
             //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
             //     sh "git push -u origin main"
             // }
-            git credentialsId: 'github-credential',
-            url: 'https://github.com/GROOM-PJT/gitOps',
-            branch: 'main'
+            // git credentialsId: 'github-credential',
+            // url: 'https://github.com/GROOM-PJT/gitOps',
+            // branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""         
-                    
-                    git config --global user.email "jeeseob5761@gmail.com"
+    
                     git config --global user.name "Jeeseob"
-                    git remote -v
                     echo "git config"
                     git checkout main
                     echo "git checkout"
