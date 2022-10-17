@@ -149,8 +149,10 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""         
+                    
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
+                    git remote -v
                     echo "git config"
                     git checkout main
                     echo "git checkout"
