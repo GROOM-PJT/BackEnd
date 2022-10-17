@@ -161,7 +161,8 @@ pipeline {
                         git config --global user.email "jeeseob5761@gmail.com"
                         git checkout main
                         kustomize edit set groom_backend:${currentBuild.number}
-                        git commit -am  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                        git add .
+                        git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                         git push
                     """)
                 }
