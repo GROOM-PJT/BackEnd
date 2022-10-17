@@ -131,7 +131,7 @@ pipeline {
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
 
-            sh "rpl -w \'jeeseob/gromm_beckend:*\' \'jeeseob/gromm_beckend:${currentBuild.number}\' \'deployment.yaml\'"
+            sh "sed -i \'s/groom_backend:*/groom_backend:${currentBuild.number}/g\' deployment.yaml"
             sh "git add deployment.yaml"
             sh "git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'"
             sshagent(credentials: ['github-credential']) {
