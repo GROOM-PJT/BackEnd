@@ -152,8 +152,9 @@ pipeline {
                 pwd
                 git config --global user.email "jeeseob5761@gmail.com"
                 git config --global user.name "Jeeseob"
-                cd gitOps
+                cd ..
                 git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
+                cd gitOps
                 git checkout main
                 sed -i 's/groom_backend:*[0-9]\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 cat deployment.yaml
