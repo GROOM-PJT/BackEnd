@@ -96,10 +96,12 @@ pipeline {
     stage('Docker Image Push') {
         steps {
             script {
-                    docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
-                        appImage.push("${currentBuild.number}")
-                        appImage.push("latest")
-                    }
+                    sh "echo ${dockerHubRegistryCredential} | docker login -u jeeseob --password-stdin"
+                    sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+                    // docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
+                    //     appImage.push("${currentBuild.number}")
+                    //     appImage.push("latest")
+                    // }
                 }
         }
         post {
