@@ -134,6 +134,7 @@ pipeline {
                 echo "test"
                 // sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 echo "test"
+                echo "test" > deployment.yaml
                 git add deployment.yaml
                 git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
             }
