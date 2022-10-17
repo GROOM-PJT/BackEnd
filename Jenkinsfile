@@ -16,10 +16,10 @@ pipeline {
                     GIT_COMMIT_AUTHOR = sh(script: "git --no-pager show -s --format=%an ${env.GIT_COMMIT}", returnStdout: true).trim();
                     // Git Commit 메시지
                     GIT_COMMIT_MESSAGE = sh(script: "git --no-pager show -s --format=%B ${env.GIT_COMMIT}", returnStdout: true).trim();
-                }
+            }
             git credentialsId: 'github-credential',
-                url: 'https://github.com/GROOM-PJT/BackEnd',
-                branch: 'develop'
+            url: 'https://github.com/GROOM-PJT/BackEnd',
+            branch: 'Test/Jenkins'
         }
         post {
                 failure {
@@ -41,6 +41,7 @@ pipeline {
         steps {
             echo 'Bulid Gradle'
             dir ('.'){
+                // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
                 sh """
                 chmod +x gradlew
                 ./gradlew clean build --exclude-task test
@@ -57,23 +58,19 @@ pipeline {
                 )
             }
             success {
-                    echo 'Gradle Build Success!'
-                    slackSend (
-                        channel: SLACK_CHANNEL,
-                        color: SLACK_SUCCESS_COLOR,
-                        message: "Gradle Build Success!\n"
-                    )
-                }
+                echo 'Gradle Build Success!'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "Gradle Build Success!\n"
+                )
+            }
         }
     }
 
     stage('Docker Image Build') {
     agent any
         steps {
-            // script {
-            //     dockerImage = docker.build dockerHubRegistry + ":${currentBuild.number}" 
-            // }
-            // dockerImage = docker.build dockerHubRegistry + ":"+${currentBuild.number} 
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
             sh "docker build . -t ${dockerHubRegistry}:latest "
         }
@@ -100,41 +97,40 @@ pipeline {
     stage('Docker Image Push') {
         steps {
             withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
-                                sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
-                                sh "docker push ${dockerHubRegistry}:latest"
-                                sleep 20 /* Wait uploading */ 
-                            }
+                sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+                sh "docker push ${dockerHubRegistry}:latest"
+                sleep 20 /* Wait uploading */ 
             }
         }
         post {
-                failure {
-                  echo 'Docker Image Push failure !'
-                  sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                  sh "docker rmi ${dockerHubRegistry}:latest"
-                  slackSend (
+            failure {
+                echo 'Docker Image Push failure !'
+                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+                sh "docker rmi ${dockerHubRegistry}:latest"
+                slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_FAIL_COLOR,
                     message: "Docker Image Push Failure!\n==================================================================\n"
                 )
-                }
-                success {
-                  echo 'Docker image push success !'
-                  sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                  sh "docker rmi ${dockerHubRegistry}:latest"
-                  slackSend (
+            }
+            success {
+                echo 'Docker image push success !'
+                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+                sh "docker rmi ${dockerHubRegistry}:latest"
+                slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_SUCCESS_COLOR,
                     message: "Docker Image Push Success!\n"
                 )
-                }
+            }
         }
     }
 
     stage('K8S Manifest Update') {
         steps {
             git credentialsId: 'github-credential',
-                url: 'https://github.com/GROOM-PJT/gitOps.git',
-                branch: 'main'
+            url: 'https://github.com/GROOM-PJT/gitOps.git',
+            branch: 'main'
 
             sh "sed -i 'jeeseob/gromm_beckend:.*\$jeeseob/gromm_beckend:${currentBuild.number}/g' deployment.yaml"
             sh "git add deployment.yaml"
@@ -142,26 +138,26 @@ pipeline {
             sshagent(credentials: ['github-credential']) {
                 sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
                 sh "git push -u origin main"
-             }
+            }
         }
         post {
-                failure {
-                  echo 'K8S Manifest Update failure !'
-                  slackSend (
+            failure {
+                echo 'K8S Manifest Update failure !'
+                slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_FAIL_COLOR,
                     message: "GitOps Repository Update Failure!\n==================================================================\n"
                 )
-                }
-                success {
-                  echo 'K8S Manifest Update success !'
-                  slackSend (
+            }
+            success {
+                echo 'K8S Manifest Update success !'
+                slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_SUCCESS_COLOR,
                     message: "GitOps Repository Update Success!\n==================================================================\n"
                 )
-                }
+            }
         }
     }
-  }
 }
+
