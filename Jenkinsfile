@@ -133,14 +133,15 @@ pipeline {
             script {
                 git config --global user.name "Jeeseob"
                 git config --global user.eamil "jeeseob5761@gmail.com"
-                sed -i 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+                sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 git add deployment.yaml
                 git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
-                git push -u origin main
-                git commit --amend --reset-author
-                }
-
             }
+            sshagent(credentials: ['github-credential']) {
+                sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
+                sh "git push -u origin main"
+            }
+
         }
         post {
             failure {
