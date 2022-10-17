@@ -149,7 +149,7 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""
-                    git clone https://github.com/GROOM-PJT/gitOps.git
+                    git remote add origin https://github.com/GROOM-PJT/gitOps.git
                     cd gitOps             
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
