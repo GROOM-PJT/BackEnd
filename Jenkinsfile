@@ -143,13 +143,13 @@ pipeline {
             //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
             //     sh "git push -u origin main"
             // }
-            git credentialsId: 'github-credential',
-            url: 'https://github.com/GROOM-PJT/gitOps',
-            branch: 'main'
+            // git credentialsId: 'github-credential',
+            // url: 'https://github.com/GROOM-PJT/gitOps',
+            // branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""             
-                
+                    git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     git checkout main
@@ -157,7 +157,6 @@ pipeline {
                     git add deployment.yaml
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     git remote -v
-        
                     git push origin main
                 """)
             //}
