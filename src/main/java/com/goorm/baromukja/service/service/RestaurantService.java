@@ -10,7 +10,7 @@ public interface RestaurantService {
 
     RestaurantResponse findById(Long restauraintId);
 
-    RestaurantDto findByIdDto(Long restauraintId);
+    RestaurantDto findByIdDto(Long restaurantId);
 
     RestaurantResponseWithMember findByIdWithMember(Long restaurantId);
 
