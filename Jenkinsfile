@@ -143,11 +143,11 @@ pipeline {
             //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
             //     sh "git push -u origin main"
             // }
-            script {
-                credentialsId: 'github-credential',
-                url: 'https://github.com/GROOM-PJT/gitOps',
-                branch: 'main'
-            }
+            
+            credentialsId: 'github-credential',
+            url: 'https://github.com/GROOM-PJT/gitOps',
+            branch: 'main'
+            
             sshagent(credentials: ['github-credentia']){
                 sh("""
                     echo "git test"
