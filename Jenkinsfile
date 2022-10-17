@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    dockerHubRegistry = 'jeeseob/groom_beckend'
+    dockerHubRegistry = 'jeeseob/groom_backend'
     dockerHubRegistryCredential = 'docker-credential'
     // DOCKERHUB_CREDENTIALS = credentials('docker-credential')
   }
@@ -71,8 +71,8 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         steps {
-            sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
-            sh "docker build . -t ${dockerHubRegistry}:latest "
+            sh "docker build -t ${dockerHubRegistry}:${currentBuild.number}"
+            sh "docker build -t ${dockerHubRegistry}:latest "
         }
         post {
             failure {
@@ -96,7 +96,7 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            sh("docker push ${dockerHubRegistry}:${currentBuild.number}")
+            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
                     // sh "echo ${dockerHubRegistryCredential} | docker login -u ${dockerHubRegistryCredential} --password-stdin"
                     
