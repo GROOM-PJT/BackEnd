@@ -69,7 +69,7 @@ pipeline {
     }
 
     stage('Docker Image Build') {
-    agent any
+    //agent any
         dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
         // steps {
         //     // dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
@@ -100,7 +100,6 @@ pipeline {
         steps {
             withDockerRegistry([ credentialsId: "docker-credential", url: "" ]) {
                 dockerImage.push()
-                
             }
             // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
