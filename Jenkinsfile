@@ -144,8 +144,8 @@ pipeline {
             //     sh "git push -u origin main"
             // }
             script {
-                url: 'https://github.com/GROOM-PJT/gitOps.git',
                 credentialsId: 'github-credential',
+                url: 'https://github.com/GROOM-PJT/gitOps',
                 branch: 'main'
             }
             sshagent(credentials: ['github-credentia']){
