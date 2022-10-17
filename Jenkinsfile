@@ -153,12 +153,13 @@ pipeline {
                     export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
                     echo "git ssh command"                    
                     git config --global user.email "jeeseob5761@gmail.com"
+                    git config --global user.name "Jeeseob"
                     echo "git config"
                     git checkout main
                     echo "git checkout"
                     echo "test" > deployment.yaml
                     echo "kustomize"
-                    git add .
+                    git add deployment.yaml
                     echo "add"
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     echo "commit"
