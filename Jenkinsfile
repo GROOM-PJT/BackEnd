@@ -149,6 +149,9 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""             
+                
+                    git config --global user.email "jeeseob5761@gmail.com"
+                    git config --global user.name "Jeeseob"
                     git checkout main
                     echo "test" > deployment.yaml
                     git add deployment.yaml
