@@ -93,56 +93,78 @@ pipeline {
         }
     }
 
-    stage('Docker Image Push') {
-        steps {
-            script {
-                    docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
-                        appImage.push("${currentBuild.number}")
-                        appImage.push("latest")
-                    }
-                }
-        }
-        post {
-            failure {
-                echo 'Docker Image Push failure !'
-                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                sh "docker rmi ${dockerHubRegistry}:latest"
-                slackSend (
-                    channel: SLACK_CHANNEL,
-                    color: SLACK_FAIL_COLOR,
-                    message: "Docker Image Push Failure!\n==================================================================\n"
-                )
-            }
-            success {
-                echo 'Docker image push success !'
-                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                sh "docker rmi ${dockerHubRegistry}:latest"
-                slackSend (
-                    channel: SLACK_CHANNEL,
-                    color: SLACK_SUCCESS_COLOR,
-                    message: "Docker Image Push Success!\n"
-                )
-            }
-        }
-    }
+    // stage('Docker Image Push') {
+    //     steps {
+    //         script {
+    //                 docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
+    //                     appImage.push("${currentBuild.number}")
+    //                     appImage.push("latest")
+    //                 }
+    //             }
+    //     }
+    //     post {
+    //         failure {
+    //             echo 'Docker Image Push failure !'
+    //             sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+    //             sh "docker rmi ${dockerHubRegistry}:latest"
+    //             slackSend (
+    //                 channel: SLACK_CHANNEL,
+    //                 color: SLACK_FAIL_COLOR,
+    //                 message: "Docker Image Push Failure!\n==================================================================\n"
+    //             )
+    //         }
+    //         success {
+    //             echo 'Docker image push success !'
+    //             sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+    //             sh "docker rmi ${dockerHubRegistry}:latest"
+    //             slackSend (
+    //                 channel: SLACK_CHANNEL,
+    //                 color: SLACK_SUCCESS_COLOR,
+    //                 message: "Docker Image Push Success!\n"
+    //             )
+    //         }
+    //     }
+    // }
 
     stage('K8S Manifest Update') {
         steps {
-            git credentialsId: 'github-credential',
-            url: 'https://github.com/GROOM-PJT/gitOps.git',
-            branch: 'main'
-            script {
-                echo "test"
-                // sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
-                echo "test"
-                echo "test" > deployment.yaml
-                git add deployment.yaml
-                git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
-            }
-            sshagent(credentials: ['github-credential']) {
-                sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
-                sh "git push -u origin main"
-            }
+            // git credentialsId: 'github-credential',
+            // url: 'https://github.com/GROOM-PJT/gitOps.git',
+            // branch: 'main'
+            // script {
+            //     echo "test"
+            //     // sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+            //     echo "test"
+            //     echo "test" > deployment.yaml
+            //     git add deployment.yaml
+            //     git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
+            // }
+            // sshagent(credentials: ['github-credential']) {
+            //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
+            //     sh "git push -u origin main"
+            // }
+
+
+            checkout([$class: 'GitSCM',
+                        branches: [[name: '*/main' ]],
+                        extensions: scm.extensions,
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/GROOM-PJT/gitOps.git',
+                           credentialsId: 'github-credential',
+                        ]]
+                ])
+                sshagent(credentials: ['github-credentia']){
+                    sh("""
+                        #!/usr/bin/env bash
+                        set +x
+                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
+                        git config --global user.email "jeeseob5761@gmail.com"
+                        git checkout main
+                        kustomize edit set groom_backend:${currentBuild.number}
+                        git commit -am  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                        git push
+                    """)
+                }
 
         }
         post {
