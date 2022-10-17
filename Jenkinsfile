@@ -156,7 +156,7 @@ pipeline {
                     echo "git config"
                     git checkout main
                     echo "git checkout"
-                    kustomize edit set groom_backend:${currentBuild.number}
+                    echo "test" > deployment.yaml
                     echo "kustomize"
                     git add .
                     echo "add"
