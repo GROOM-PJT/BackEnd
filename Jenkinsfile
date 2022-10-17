@@ -154,7 +154,7 @@ pipeline {
                     git add deployment.yaml
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     git remote -v
-                    git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
+        
                     git push origin main
                 """)
             //}
