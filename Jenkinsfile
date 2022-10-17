@@ -3,7 +3,7 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/groom_beckend'
     dockerHubRegistryCredential = 'docker-credential'
-    DOCKERHUB_CREDENTIALS=credentials('docker-credential')
+    DOCKERHUB_CREDENTIALS = credentials('docker-credential')
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -97,7 +97,7 @@ pipeline {
     stage('Docker Image Push') {
         steps {
             script {
-                    sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                    sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
                     sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
                     // docker.withRegistry('https://registry.hub.docker.com', dockerHubRegistryCredential){
                     //     appImage.push("${currentBuild.number}")
