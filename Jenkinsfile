@@ -3,7 +3,6 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/gromm_beckend'
     dockerHubRegistryCredential = 'docker-credential'
-    githubCredential = 'github-credential'
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -148,16 +147,16 @@ pipeline {
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
         
-            // sshagent(credentials: ['github-credentia']){
+            withCredentials([usernamePassword(credentialsId: 'github-credential', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]){
             sh("""
                 pwd
-                git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
+                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
                 git checkout main
                 sed -i 's/groom_backend:*[0-9]\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 cat deployment.yaml
                 git add deployment.yaml
                 git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
-                git push https://Jeeseob:${githubCredential}@github.com/GROOM-PJT/gitOps.git
+                git push origin main
             """)
             //}
 
