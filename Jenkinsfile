@@ -143,35 +143,30 @@ pipeline {
             //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
             //     sh "git push -u origin main"
             // }
-
-
-            checkout([$class: 'GitSCM',
-                        branches: [[name: '*/main' ]],
-                        extensions: scm.extensions,
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/GROOM-PJT/gitOps.git',
-                           credentialsId: 'github-credential',
-                        ]]
-                ])
-                sshagent(credentials: ['github-credentia']){
-                    sh("""
-                        echo "git test"
-                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
-                        echo "git ssh command"                    
-                        git config --global user.email "jeeseob5761@gmail.com"
-                        echo "git config"
-                        git checkout main
-                        echo "git checkout"
-                        kustomize edit set groom_backend:${currentBuild.number}
-                        echo "kustomize"
-                        git add .
-                        echo "add"
-                        git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
-                        echo "commit"
-                        git push origin main
-                        echo "push"
-                    """)
-                }
+            script {
+                url: 'https://github.com/GROOM-PJT/gitOps.git',
+                credentialsId: 'github-credential',
+                branch: 'main'
+            }
+            sshagent(credentials: ['github-credentia']){
+                sh("""
+                    echo "git test"
+                    export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
+                    echo "git ssh command"                    
+                    git config --global user.email "jeeseob5761@gmail.com"
+                    echo "git config"
+                    git checkout main
+                    echo "git checkout"
+                    kustomize edit set groom_backend:${currentBuild.number}
+                    echo "kustomize"
+                    git add .
+                    echo "add"
+                    git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                    echo "commit"
+                    git push origin main
+                    echo "push"
+                """)
+            }
 
         }
         post {
