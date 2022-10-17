@@ -149,6 +149,7 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""             
+                    pwd
                     git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
