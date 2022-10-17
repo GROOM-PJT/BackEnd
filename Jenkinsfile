@@ -128,36 +128,16 @@ pipeline {
 
     stage('K8S Manifest Update') {
         steps {
-            // git credentialsId: 'github-credential',
-            // url: 'https://github.com/GROOM-PJT/gitOps.git',
-            // branch: 'main'
-            // script {
-            //     echo "test"
-            //     // sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
-            //     echo "test"
-            //     echo "test" > deployment.yaml
-            //     git add deployment.yaml
-            //     git commit -m 'UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning'
-            // }
-            // sshagent(credentials: ['github-credential']) {
-            //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
-            //     sh "git push -u origin main"
-            // }
-
-
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
-        
             withCredentials([usernamePassword(credentialsId: 'github-credential', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]){
             sh("""
                 pwd
                 git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
                 git checkout main
                 sed -i 's/groom_backend:*[0-9]\$/groom_backend:${currentBuild.number}/g' deployment.yaml
-                cat deployment.yaml
-                git add deployment.yaml
-                git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                git commit -am  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                 git push origin main
             """)
             }
