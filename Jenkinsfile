@@ -157,13 +157,19 @@ pipeline {
                     sh("""
                         #!/usr/bin/env bash
                         set +x
-                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
+                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"                    
                         git config --global user.email "jeeseob5761@gmail.com"
+                        echo "git config"
                         git checkout main
+                        echo "git checkout"
                         kustomize edit set groom_backend:${currentBuild.number}
+                        echo "kustomize"
                         git add .
+                        echo "add"
                         git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
-                        git push
+                        echo "commit"
+                        git push origin main
+                        echo "push"
                     """)
                 }
 
