@@ -143,30 +143,18 @@ pipeline {
             //     sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
             //     sh "git push -u origin main"
             // }
-            // git credentialsId: 'github-credential',
-            // url: 'https://github.com/GROOM-PJT/gitOps',
-            // branch: 'main'
+            git credentialsId: 'github-credential',
+            url: 'https://github.com/GROOM-PJT/gitOps',
+            branch: 'main'
         
             // sshagent(credentials: ['github-credentia']){
-                sh("""         
-                    git clone git@github.com:GROOM-PJT/gitOps.git
-
-                    echo "git config"
+                sh("""             
+                    git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
                     git checkout main
-                    echo "git checkout"
-                    cat deployment.yaml
                     echo "test" > deployment.yaml
-                    echo "kustomize"
-                    cat deployment.yaml
-
                     git add deployment.yaml
-                    
-                    
-                    echo "add"
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
-                    echo "commit"
                     git push origin main
-                    echo "push"
                 """)
             //}
 
