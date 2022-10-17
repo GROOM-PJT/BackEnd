@@ -154,7 +154,7 @@ pipeline {
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     git checkout main
-                    sudo sed -i 's/groom_backend:*[0-9]$/groom_backend:45/g' deployment.yaml
+                    sudo sed -i 's/groom_backend:*[0-9]$/groom_backend:${currentBuild.number}/g' deployment.yaml
                     git add deployment.yaml
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     git remote -v
