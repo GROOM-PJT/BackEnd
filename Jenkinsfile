@@ -132,9 +132,6 @@ pipeline {
             branch: 'main'
             script {
                 echo "test"
-                git config --global user.name "Jeeseob"
-                git config --global user.eamil "jeeseob5761@gmail.com"
-                echo "test"
                 sed 's/groom_backend:*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 echo "test"
                 git add deployment.yaml
