@@ -1,6 +1,6 @@
 package com.goorm.baromukja.entity;
 
-import com.goorm.baromukja.dto.member.MemberRes;
+import com.goorm.baromukja.dto.member.MemberResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,8 +56,8 @@ public class Member {
         return roles;
     }
 
-    public MemberRes toDto() {
-        return MemberRes.builder()
+    public MemberResponse toResponse() {
+        return MemberResponse.builder()
                 .id(this.id)
                 .username(this.username)
                 .role(role.getRole())

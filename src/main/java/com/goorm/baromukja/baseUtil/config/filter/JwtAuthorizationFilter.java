@@ -9,7 +9,9 @@ import com.goorm.baromukja.baseUtil.response.dto.JwtErrorCode;
 import com.goorm.baromukja.entity.Member;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,6 +52,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             String refreshJwtToken = request
                     .getHeader(JwtProperties.REFRESH_HEADER_PREFIX)
                     .replace(JwtProperties.TOKEN_PREFIX, "");
+            log.info(accessJwtToken);
+            log.info(refreshJwtToken);
             jwtService.checkTokenValid(refreshJwtToken);
 
             log.info("리프레쉬 토큰 회원 조회");
@@ -79,7 +83,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (CustomJwtException cusJwtExc) {
             request.setAttribute(JwtProperties.EXCEPTION, cusJwtExc.getMessage());
-        } catch (TokenExpiredException ee) {
+        } catch (TokenExpiredException e) {
             request.setAttribute(JwtProperties.EXCEPTION, JwtErrorCode.JWT_REFRESH_EXPIRED.getCode());
         } catch (MalformedJwtException | UnsupportedJwtException mj) {
             request.setAttribute(JwtProperties.EXCEPTION, JwtErrorCode.JWT_NOT_VALID.getCode());

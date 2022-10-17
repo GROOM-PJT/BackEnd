@@ -83,9 +83,11 @@ public class JwtService {
 	}
 
 	public void checkHeaderValid(HttpServletRequest request) {
+		log.info("checkHeaderValid");
 		String accessJwt = request.getHeader(JwtProperties.HEADER_PREFIX);
+		log.info(accessJwt);
 		String refreshJwt = request.getHeader(JwtProperties.REFRESH_HEADER_PREFIX);
-
+		log.info(refreshJwt);
 		if (accessJwt == null) {
 			throw new CustomJwtException(JwtErrorCode.JWT_ACCESS_NOT_VALID.getCode());
 		} else if (refreshJwt == null) {
@@ -94,6 +96,7 @@ public class JwtService {
 	}
 
 	public void checkTokenValid(String token) {
+		log.info(token);
 		require(Algorithm.HMAC512(SECRET_KEY))
 				.build()
 				.verify(token);

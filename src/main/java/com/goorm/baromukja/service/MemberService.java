@@ -2,16 +2,13 @@ package com.goorm.baromukja.service;
 
 import com.goorm.baromukja.baseUtil.exception.BussinessException;
 import com.goorm.baromukja.baseUtil.exception.ExMessage;
-import com.goorm.baromukja.dto.member.MemberRes;
-import com.goorm.baromukja.dto.member.MemberSignupReq;
+import com.goorm.baromukja.dto.member.MemberResponse;
+import com.goorm.baromukja.dto.member.MemberSignupRequest;
 import com.goorm.baromukja.entity.Member;
 import com.goorm.baromukja.entity.MemberRole;
 import com.goorm.baromukja.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,22 +27,22 @@ public class MemberService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public List<MemberRes> findAll() {
+	public List<MemberResponse> findAll() {
 		return memberRepository.findAll()
 				.stream()
-				.map(Member::toDto)
+				.map(Member::toResponse)
 				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public MemberRes findByUsername(String username) {
+	public MemberResponse findByUsername(String username) {
 		return memberRepository.findByUsername(username)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
-				.toDto();
+				.toResponse();
 	}
 
 	@Transactional
-	public void signUp(MemberSignupReq memberSignupReq, MemberRole role) {
+	public void signUp(MemberSignupRequest memberSignupReq, MemberRole role) {
 		String username = memberSignupReq.getUsername();
 		String password1 = memberSignupReq.getPassword();
 		String password2 = memberSignupReq.getPassword2();

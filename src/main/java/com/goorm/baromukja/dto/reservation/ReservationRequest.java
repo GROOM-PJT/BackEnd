@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ReservationRequest {
     private Long restaurantId;
-    // 유저정보를 body에 넣을지, jwt에 넣어서 파싱할지 선택해야함.
-    //private Long memberId;
+    // 예약자 정보
+    private String username;
 
     // 인원
     private int numberOfReservations;
@@ -31,8 +31,6 @@ public class ReservationRequest {
 
     public Reservation toEntity() {
         return Reservation.builder()
-                //.restaraunt(restrauntService.findById(this.restarurantId).toEntity())
-                //.member(memberService.findById(this.memberId).toEntity())
                 .comment(this.comment)
                 .reservationTime(this.reservationTime)
                 .numberOfReservations(this.numberOfReservations)

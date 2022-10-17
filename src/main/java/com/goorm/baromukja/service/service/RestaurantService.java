@@ -1,16 +1,24 @@
 package com.goorm.baromukja.service.service;
 
-import com.goorm.baromukja.dto.restaurant.RestaurantRequest;
-import com.goorm.baromukja.dto.restaurant.RestaurantResponse;
+import com.goorm.baromukja.dto.member.MemberResponse;
+import com.goorm.baromukja.dto.restaurant.*;
 
 import java.util.List;
 
 public interface RestaurantService {
-    RestaurantResponse findById(Long id);
+    RestaurantResponseDetail findByIdDetail(Long restaurantId);
+
+    RestaurantResponse findById(Long restauraintId);
+
+    RestaurantDto findByIdDto(Long restauraintId);
+
+    RestaurantResponseWithMember findByIdWithMember(Long restaurantId);
 
     void delete(Long restaurantId);
 
-    RestaurantResponse save(RestaurantRequest request);
+    RestaurantDto save(RestaurantRequest request, MemberResponse memberResponse);
+
+    void addImageUrl(Long restaurantId, String imageUrl);
 
     List<RestaurantResponse> findAll();
 

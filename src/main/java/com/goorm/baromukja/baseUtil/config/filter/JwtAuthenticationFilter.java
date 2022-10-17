@@ -5,7 +5,7 @@ import com.goorm.baromukja.baseUtil.config.JwtProperties;
 import com.goorm.baromukja.baseUtil.config.auth.PrincipalDetails;
 import com.goorm.baromukja.baseUtil.config.service.JwtService;
 import com.goorm.baromukja.baseUtil.exception.ExMessage;
-import com.goorm.baromukja.dto.member.LoginReq;
+import com.goorm.baromukja.dto.member.LoginRequest;
 import com.goorm.baromukja.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("TRY LOGIN USERNAME & PASSWORD : 인증 검증 _ JwtAuthenticationFilter.attemptAuthentication");
         ObjectMapper om = new ObjectMapper();
         try {
-            LoginReq login = om.readValue(request.getInputStream(), LoginReq.class);
+            LoginRequest login = om.readValue(request.getInputStream(), LoginRequest.class);
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
             return authenticationManager.authenticate(authentication);
@@ -93,7 +93,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json;charset=UTF-8");
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", true);
         jsonObject.put("code", 1);
         jsonObject.put("message", message);
 

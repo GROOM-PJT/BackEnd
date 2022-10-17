@@ -2,6 +2,7 @@ package com.goorm.baromukja.baseUtil.config.auth;
 
 import com.goorm.baromukja.entity.Member;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,14 +28,10 @@ UserDetails(상속:PrincipalDetails) 를 만든다.
  */
 
 @Data
+@RequiredArgsConstructor
 public class PrincipalDetails implements UserDetails {
 
 	private final Member member;
-
-	public PrincipalDetails(Member member) {
-		this.member = member;
-	}
-
 
 	// 해당 유저의 권한을 리턴한다.
 	@Override
