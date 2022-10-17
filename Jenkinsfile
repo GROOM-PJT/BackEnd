@@ -68,7 +68,6 @@ pipeline {
             // script {
             //     dockerImage = docker.build dockerHubRegistry + ":${currentBuild.number}" 
             // }
-            sh "cp ./build/libs/*SHOT.jar ./"
             // dockerImage = docker.build dockerHubRegistry + ":"+${currentBuild.number} 
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
             sh "docker build . -t ${dockerHubRegistry}:latest "
