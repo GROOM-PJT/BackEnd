@@ -95,11 +95,11 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
+            //withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
                 sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
                 // sh "docker push ${dockerHubRegistry}:latest"
                 sleep 20 /* Wait uploading */ 
-            }
+            //}
         }
         post {
             failure {
