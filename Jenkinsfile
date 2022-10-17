@@ -50,13 +50,18 @@ pipeline {
         post {
             failure {
                 error 'This pipeline stops gradle Jar Build'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Gradle Build Failure!\n==================================================================\n"
+                )
             }
             success {
                     echo 'Gradle Build Success!'
                     slackSend (
                         channel: SLACK_CHANNEL,
                         color: SLACK_SUCCESS_COLOR,
-                        message: "==================================================================\nGradle Build Success!\n==================================================================\n"
+                        message: "Gradle Build Success!\n"
                     )
                 }
         }
@@ -75,13 +80,18 @@ pipeline {
         post {
             failure {
                 echo 'Docker image build failure !'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Docker Image build Failure!\n==================================================================\n"
+                )
             }
             success {
                 echo 'Docker image build success !'
                 slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_SUCCESS_COLOR,
-                    message: "==================================================================\nDocker Image Build Success!\n==================================================================\n"
+                    message: "Docker Image Build Success!\n"
                 )
             }
         }
@@ -89,16 +99,11 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            // withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
-            //                     // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
-            //                     // sh "docker push ${dockerHubRegistry}:latest"
-            //                     dockerImage.push()
-            //                     sleep 20 /* Wait uploading */ 
-            //                 }
-            script {
-                docker.withRegistry( '', dockerHubRegistryCredential ) {
-                    dockerImage.push()
-                }
+            withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
+                                sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+                                sh "docker push ${dockerHubRegistry}:latest"
+                                sleep 20 /* Wait uploading */ 
+                            }
             }
         }
         post {
@@ -106,11 +111,21 @@ pipeline {
                   echo 'Docker Image Push failure !'
                   sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
                   sh "docker rmi ${dockerHubRegistry}:latest"
+                  slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Docker Image Push Failure!\n==================================================================\n"
+                )
                 }
                 success {
                   echo 'Docker image push success !'
                   sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
                   sh "docker rmi ${dockerHubRegistry}:latest"
+                  slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "Docker Image Push Success!\n"
+                )
                 }
         }
     }
@@ -132,9 +147,19 @@ pipeline {
         post {
                 failure {
                   echo 'K8S Manifest Update failure !'
+                  slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "GitOps Repository Update Failure!\n==================================================================\n"
+                )
                 }
                 success {
                   echo 'K8S Manifest Update success !'
+                  slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "GitOps Repository Update Success!\n==================================================================\n"
+                )
                 }
         }
     }
