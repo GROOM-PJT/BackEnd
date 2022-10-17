@@ -147,7 +147,7 @@ pipeline {
             url: 'https://github.com/GROOM-PJT/gitOps',
             branch: 'main'
         
-            sshagent(credentials: ['github-credentia']){
+            // sshagent(credentials: ['github-credentia']){
                 sh("""
                     echo "git test"
                     export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
@@ -165,7 +165,7 @@ pipeline {
                     git push origin main
                     echo "push"
                 """)
-            }
+            //}
 
         }
         post {
