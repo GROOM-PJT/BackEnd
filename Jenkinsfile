@@ -70,11 +70,12 @@ pipeline {
 
     stage('Docker Image Build') {
     agent any
-        steps {
-            // dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
-            sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
-            sh "docker build . -t ${dockerHubRegistry}:latest "
-        }
+        dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
+        // steps {
+        //     // dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
+        //     sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
+        //     sh "docker build . -t ${dockerHubRegistry}:latest "
+        // }
         post {
             failure {
                 echo 'Docker image build failure !'
@@ -98,9 +99,8 @@ pipeline {
     stage('Docker Image Push') {
         steps {
             withDockerRegistry([ credentialsId: "docker-credential", url: "" ]) {
-                script {
-                    docker push ${dockerHubRegistry}:${currentBuild.number}
-                }
+                dockerImage.push()
+                
             }
             // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
