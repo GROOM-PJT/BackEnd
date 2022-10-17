@@ -149,7 +149,7 @@ pipeline {
         
             // sshagent(credentials: ['github-credentia']){
                 sh("""             
-                    git remote set-url origin git@github.com:GROOM-PJT/gitOps.git
+                    git remote -v git@github.com:GROOM-PJT/gitOps.git
                     git config --global user.email "jeeseob5761@gmail.com"
                     git config --global user.name "Jeeseob"
                     echo "git config"
@@ -157,7 +157,11 @@ pipeline {
                     echo "git checkout"
                     echo "test" > deployment.yaml
                     echo "kustomize"
+                    cat deployment.yaml
+
                     git add deployment.yaml
+                    
+                    
                     echo "add"
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     echo "commit"
