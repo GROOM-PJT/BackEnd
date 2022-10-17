@@ -165,7 +165,7 @@ pipeline {
                     echo "add"
                     git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                     echo "commit"
-                    git push
+                    git push origin main
                     echo "push"
                 """)
             //}
