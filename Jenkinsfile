@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    dockerHubRegistry = 'jeeseob/gromm_beckend'
+    dockerHubRegistry = 'jeeseob/groom_beckend'
     dockerHubRegistryCredential = 'docker-credential'
   }
   stages {
