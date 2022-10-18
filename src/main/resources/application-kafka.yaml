@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: kafka
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: groom
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring:
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
+          json:
+            value:
+              default:
+                type: com.groomproject.sharedsidePJT.reservation.dto.ReservationRequest
+            trusted:
+              packages: com.groomproject.sharedsidePJT.reservation.dto
+topic:
+  reservation:
+    name: reservation
