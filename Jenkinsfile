@@ -6,6 +6,9 @@ pipeline {
   }
   stages {
     stage('Checkout Application Git Branch') {
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
            script {
                     SLACK_CHANNEL = "jenkins"
@@ -37,6 +40,9 @@ pipeline {
 
    stage('Gradle Jar Build') {
     agent any
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             echo 'Bulid Gradle'
             dir ('.'){
@@ -69,6 +75,9 @@ pipeline {
 
     stage('Docker Image Build') {
     agent any
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             sh "id"
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
@@ -95,6 +104,9 @@ pipeline {
     }
 
     stage('Docker Image Push') {
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
@@ -127,6 +139,9 @@ pipeline {
     
 
     stage('GitOps Repository Update Success ') {
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/gitOps',
