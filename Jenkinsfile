@@ -137,7 +137,8 @@ pipeline {
                 git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
                 git checkout main
                 sed -i 's/groom_backend:*[0-9]\$/groom_backend:${currentBuild.number}/g' deployment.yaml
-                git commit -am  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                git add deployment.yaml
+                git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                 git push origin main
             """)
             }
@@ -145,11 +146,11 @@ pipeline {
         }
         post {
             failure {
-                echo 'GitOps Repository Update Success !'
+                echo 'GitOps Repository Update Failure !'
                 slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_FAIL_COLOR,
-                    message: "GitOps Repository Update Success!\n==================================================================\n"
+                    message: "GitOps Repository Update Failure!\n==================================================================\n"
                 )
             }
             success {
