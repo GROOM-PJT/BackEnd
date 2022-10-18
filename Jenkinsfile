@@ -97,7 +97,7 @@ pipeline {
         steps {
             sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
-            sh ("docker push ${dockerHubRegistry}:lastest")
+            sh ("docker push ${dockerHubRegistry}:latest")
             }
         post {
             failure {
