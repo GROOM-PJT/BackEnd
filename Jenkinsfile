@@ -70,7 +70,6 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         steps {
-            // dockerImage = docker.build("${dockerHubRegistry}:${currentBuild.number}")
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
             sh "docker build . -t ${dockerHubRegistry}:latest "
         }
@@ -98,6 +97,7 @@ pipeline {
         steps {
             sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
+            sh ("docker push ${dockerHubRegistry}:lastest")
             }
         post {
             failure {
@@ -125,7 +125,7 @@ pipeline {
 
     
 
-    stage('K8S Manifest Update') {
+    stage('GitOps Repository Update Success ') {
         steps {
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/gitOps',
@@ -144,11 +144,11 @@ pipeline {
         }
         post {
             failure {
-                echo 'K8S Manifest Update failure !'
+                echo 'GitOps Repository Update Success !'
                 slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_FAIL_COLOR,
-                    message: "GitOps Repository Update Failure!\n==================================================================\n"
+                    message: "GitOps Repository Update Success!\n==================================================================\n"
                 )
             }
             success {
