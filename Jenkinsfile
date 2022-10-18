@@ -97,10 +97,9 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            sh ("echo ${dockerHubRegistryCredential_PSW} | docker login -u ${dockerHubRegistryCredential_USR} --password-stdin")
+            sh ("echo ${dockerHubRegistryCredential_PSW} | docker login -u \\${dockerHubRegistryCredential_USR} --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
             }
-        }
         post {
             failure {
                 echo 'Docker Image Push failure !'
@@ -124,6 +123,8 @@ pipeline {
             }
         }
     }
+
+    
 
     stage('K8S Manifest Update') {
         steps {
