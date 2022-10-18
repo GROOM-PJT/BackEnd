@@ -97,9 +97,8 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            withDockerRegistry([ credentialsId: "docker-credential", url: "https://registry.hub.docker.com"]) {
+            dockerFingerprintRun([ credentialsId: "docker-credential"]) {
                 sh("docker push ${dockerHubRegistry}:${currentBuild.number}")
-                
             }
             // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
