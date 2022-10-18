@@ -70,6 +70,7 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         steps {
+            sh "id"
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
             sh "docker build . -t ${dockerHubRegistry}:latest "
         }
