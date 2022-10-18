@@ -2,8 +2,7 @@ pipeline {
   agent any
   environment {
     dockerHubRegistry = 'jeeseob/groom_backend'
-    dockerHubRegistryCredential = 'docker-credential'
-    // DOCKERHUB_CREDENTIALS = credentials('docker-credential')
+    DOCKERHUB_CREDENTIALS = credentials('docker-credential')
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -97,7 +96,7 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            sh ("echo \\$dockerHubRegistryCredential_PSW | docker login -u \\$dockerHubRegistryCredential_USR --password-stdin")
+            sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
             }
         post {
