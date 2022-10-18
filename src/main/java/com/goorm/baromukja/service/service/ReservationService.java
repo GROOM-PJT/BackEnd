@@ -2,6 +2,7 @@ package com.goorm.baromukja.service.service;
 
 import com.goorm.baromukja.dto.reservation.ReservationRequest;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
+import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface ReservationService {
     ReservationResponse findById(Long id);
 
     void delete(Long reservationId);
+
+    ReservationResponseWithUsername findByIdWithUsername(Long id);
 
     ReservationResponse save(ReservationRequest request);
 

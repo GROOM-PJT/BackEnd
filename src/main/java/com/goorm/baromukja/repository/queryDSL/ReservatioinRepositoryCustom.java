@@ -3,6 +3,7 @@ package com.goorm.baromukja.repository.queryDSL;
 import com.goorm.baromukja.baseUtil.exception.BussinessException;
 import com.goorm.baromukja.baseUtil.exception.ExMessage;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
+import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
 import com.goorm.baromukja.entity.QMember;
 import com.goorm.baromukja.entity.QReservation;
 import com.goorm.baromukja.entity.Reservation;
@@ -49,5 +50,17 @@ public class ReservatioinRepositoryCustom {
         } catch (Exception e) {
             throw new BussinessException(ExMessage.RESERVATION_NONE_DATA);
         }
+    }
+
+    public ReservationResponseWithUsername findByIdWithUser(Long reservationId) {
+        QReservation qReservation = QReservation.reservation;
+        Reservation reservation = jpaQueryFactory
+                .selectFrom(qReservation)
+                .join(qReservation.member)
+                .where(qReservation.id.eq(reservationId))
+                .fetchOne();
+
+        assert reservation != null;
+        return reservation.toResponseWithUsername();
     }
 }
