@@ -93,6 +93,7 @@ public class Restaurant {
                 .theme(this.theme)
                 .id(this.id)
                 .imageUrl(this.imageUrl)
+                .availableCount(this.availableCount)
                 .build();
     }
 }

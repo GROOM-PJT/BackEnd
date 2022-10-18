@@ -4,6 +4,7 @@ import com.goorm.baromukja.baseUtil.exception.BussinessException;
 import com.goorm.baromukja.baseUtil.exception.ExMessage;
 import com.goorm.baromukja.dto.reservation.ReservationRequest;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
+import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
 import com.goorm.baromukja.entity.Reservation;
 import com.goorm.baromukja.repository.ReservationRepository;
 import com.goorm.baromukja.repository.queryDSL.ReservatioinRepositoryCustom;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
+    public ReservationResponseWithUsername findByIdWithUsername(Long id) {
+        return reservatioinRepositoryCustom.findByIdWithUser(id);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<ReservationResponse> findAll() {
         return reservationRepository.findAll()
@@ -53,7 +61,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void delete(Long reservationId) {
-        // 헤더를 확인해서 요청한 사람이 해당 유저가 맞는지 확인
         reservationRepository.deleteById(reservationId);
     }
 
@@ -76,5 +83,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByRestaurantId(Long restaurantId) {
         return reservatioinRepositoryCustom.findAllByRestaurantId(restaurantId);
+    }
+
+    @Override
+    @Transactional
+    public int countNumberOfReservations(Long restaurantId, LocalDateTime reservationTime) {
+        return reservatioinRepositoryCustom.countNumberOfReservations(restaurantId, reservationTime);
     }
 }
