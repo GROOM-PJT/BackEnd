@@ -36,7 +36,8 @@ public class ReservationKafkaService {
 
     @KafkaHandler
     public void singleData(@Payload ReservationRequest reservation) {
-//        log.info("Consumed Header : " + headers.toString());
+        // TODO: 알림형태로, 현재 상황을 보내줘야 한다.
+        // log.info("Consumed Header : " + headers.toString());
         reservationService.save(reservation);
         log.info("Consumed Message Single: " + reservation.toString());
     }
