@@ -97,9 +97,9 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            dockerFingerprintRun([ credentialsId: "docker-credential"]) {
-                sh("docker push ${dockerHubRegistry}:${currentBuild.number}")
-            }
+            sh ('echo $dockerHubRegistryCredential_PSW | docker login -u dockerHubRegistryCredential_USR --password-stdin')
+            sh("docker push ${dockerHubRegistry}:${currentBuild.number}")
+            
             // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
             //script {
                     // sh "echo ${dockerHubRegistryCredential} | docker login -u ${dockerHubRegistryCredential} --password-stdin"
