@@ -1,5 +1,6 @@
 package com.goorm.baromukja.entity;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
+import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
 import lombok.*;
 
 import javax.persistence.*;
@@ -54,6 +55,17 @@ public class Reservation {
                 .reservationTime(this.reservationTime)
                 .people(this.numberOfReservations)
                 .createAt(this.createdAt)
+                .build();
+    }
+
+    public ReservationResponseWithUsername toResponseWithUsername() {
+        return ReservationResponseWithUsername.builder()
+                .id(this.id)
+                .comment(this.comment)
+                .reservationTime(this.reservationTime)
+                .people(this.numberOfReservations)
+                .createAt(this.createdAt)
+                .username(this.member.getUsername())
                 .build();
     }
 }

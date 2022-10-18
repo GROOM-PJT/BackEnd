@@ -40,8 +40,11 @@ public class ReservationControllerForUser {
     @GetMapping("/detail/{reservationId}")
     public SingleResponse<ReservationResponse> findById(HttpServletRequest request,
                                                         @PathVariable Long reservationId) {
-        // TODO: 해당 예약을 한 유저가 맞는지 확인
-        return responseService.singleResult(reservationService.findById(reservationId));
+        String username = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
+        if(username.equals(reservationService.findByIdWithUsername(reservationId).getUsername())) {
+            return responseService.singleResult(reservationService.findById(reservationId));
+        }
+        throw new BussinessException(ExMessage.NO_AUTHORITY.getMessage());
     }
 
 
@@ -49,9 +52,12 @@ public class ReservationControllerForUser {
     @DeleteMapping("/delete/{reservationId}")
     public CommonResponse delete(HttpServletRequest request,
                                  @PathVariable Long reservationId) {
-        // TODO: 해당 예약을 한 유저가 맞는지 확인
-        reservationService.delete(reservationId);
-        return responseService.successResult();
+        String username = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
+        if(username.equals(reservationService.findByIdWithUsername(reservationId).getUsername())) {
+            reservationService.delete(reservationId);
+            return responseService.successResult();
+        }
+        throw new BussinessException(ExMessage.NO_AUTHORITY.getMessage());
     }
 
 

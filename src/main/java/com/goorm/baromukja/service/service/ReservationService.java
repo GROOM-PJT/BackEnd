@@ -2,7 +2,10 @@ package com.goorm.baromukja.service.service;
 
 import com.goorm.baromukja.dto.reservation.ReservationRequest;
 import com.goorm.baromukja.dto.reservation.ReservationResponse;
+import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,6 +18,8 @@ public interface ReservationService {
 
     void delete(Long reservationId);
 
+    ReservationResponseWithUsername findByIdWithUsername(Long id);
+
     ReservationResponse save(ReservationRequest request);
 
     List<ReservationResponse> findAll();
@@ -22,6 +27,8 @@ public interface ReservationService {
     List<ReservationResponse> findAllByUsername(String username);
 
     List<ReservationResponse> findAllByRestaurantId(Long restaurantId);
+
+    int countNumberOfReservations(Long restaurantId, LocalDateTime reservationTime);
 
     // List<ReservationResponse> findByMember(Long memberId);
     // List<ReservationResponse> findByRestaurant(Long restraurantId);
