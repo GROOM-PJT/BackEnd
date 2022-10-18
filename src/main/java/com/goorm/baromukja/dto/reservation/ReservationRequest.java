@@ -29,11 +29,15 @@ public class ReservationRequest {
     // 예약 시간
     private LocalDateTime reservationTime;
 
+    // 예약 신청 시간
+    private LocalDateTime createAt;
+
     public Reservation toEntity() {
         return Reservation.builder()
                 .comment(this.comment)
                 .reservationTime(this.reservationTime)
                 .numberOfReservations(this.numberOfReservations)
+                .createdAt(this.createAt)
                 .build();
     }
 }

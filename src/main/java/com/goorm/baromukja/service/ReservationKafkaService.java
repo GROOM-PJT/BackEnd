@@ -1,5 +1,7 @@
 package com.goorm.baromukja.service;
 
+import com.goorm.baromukja.baseUtil.exception.BussinessException;
+import com.goorm.baromukja.baseUtil.exception.ExMessage;
 import com.goorm.baromukja.dto.reservation.ReservationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,9 @@ import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 /**
  * @Author : Jeeseob
@@ -36,10 +41,17 @@ public class ReservationKafkaService {
 
     @KafkaHandler
     public void singleData(@Payload ReservationRequest reservation) {
-        // TODO: 알림형태로, 현재 상황을 보내줘야 한다.
-        // log.info("Consumed Header : " + headers.toString());
-        reservationService.save(reservation);
-        log.info("Consumed Message Single: " + reservation.toString());
+        LocalDateTime reservationTime = reservation.getReservationTime();
+        // 예약 가능날짜를, 7일로 잡고, 시간을 고정으로 10AM으로 설정
+        LocalDateTime canReservationTime = reservationTime.minusDays(7).withHour(10).withMinute(0).withSecond(0);
+
+        // 예약 신청날짜 - 7일의 10시 사이에 현재시간이 있으면, 예약 가능
+        if (reservation.getCreateAt().isAfter(canReservationTime)) {
+            // TODO: 이후 인원 체크
+            reservationService.save(reservation);
+            log.info("Consumed Message Single: " + reservation.toString());
+        }
+        // TODO: 예약 결과 보내기 (Push 메세지 "webSocket")
     }
 
     // ReservationRequest가 아닌 다른 object데이터가 존재하는 경우, 무시
