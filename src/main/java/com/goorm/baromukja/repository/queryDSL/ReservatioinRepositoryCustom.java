@@ -7,12 +7,15 @@ import com.goorm.baromukja.dto.reservation.ReservationResponseWithUsername;
 import com.goorm.baromukja.entity.QMember;
 import com.goorm.baromukja.entity.QReservation;
 import com.goorm.baromukja.entity.Reservation;
+import com.goorm.baromukja.entity.Restaurant;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @Author : Jeeseob
@@ -62,5 +65,19 @@ public class ReservatioinRepositoryCustom {
 
         assert reservation != null;
         return reservation.toResponseWithUsername();
+    }
+
+    public int countNumberOfReservations(Long restaurantId, LocalDateTime reservationTime) {
+        QReservation qReservation = QReservation.reservation;
+        List<Reservation> reservationList = jpaQueryFactory
+                .selectFrom(qReservation)
+                .where(qReservation.restaurant.id.eq(restaurantId))
+                .where(qReservation.reservationTime.eq(reservationTime))
+                .fetch();
+
+        return reservationList.stream()
+                .map(Reservation::getNumberOfReservations)
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 }

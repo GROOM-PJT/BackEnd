@@ -27,6 +27,19 @@ public class RestaurantResponse {
     private String theme;
 
     private String imageUrl;
+
+    private int availableCount;
+
+    public Restaurant toEntity() {
+        return  Restaurant.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .theme(this.theme)
+                .imageUrl(this.imageUrl)
+                .availableCount(this.availableCount)
+                .build();
+    }
     // 위치 정보
     // 이미지
     // 메뉴

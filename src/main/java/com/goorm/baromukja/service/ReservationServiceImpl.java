@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByRestaurantId(Long restaurantId) {
         return reservatioinRepositoryCustom.findAllByRestaurantId(restaurantId);
+    }
+
+    @Override
+    @Transactional
+    public int countNumberOfReservations(Long restaurantId, LocalDateTime reservationTime) {
+        return reservatioinRepositoryCustom.countNumberOfReservations(restaurantId, reservationTime);
     }
 }
