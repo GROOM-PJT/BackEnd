@@ -1,11 +1,10 @@
 pipeline {
   agent any
   environment {
-    dockerHubRegistry = 'jeeseob/gromm_beckend'
-    dockerHubRegistryCredential = 'docker-credential'
+    dockerHubRegistry = 'jeeseob/groom_backend'
+    DOCKERHUB_CREDENTIALS = credentials('docker-credential')
   }
   stages {
-
     stage('Checkout Application Git Branch') {
         steps {
            script {
@@ -16,10 +15,10 @@ pipeline {
                     GIT_COMMIT_AUTHOR = sh(script: "git --no-pager show -s --format=%an ${env.GIT_COMMIT}", returnStdout: true).trim();
                     // Git Commit 메시지
                     GIT_COMMIT_MESSAGE = sh(script: "git --no-pager show -s --format=%B ${env.GIT_COMMIT}", returnStdout: true).trim();
-                }
+            }
             git credentialsId: 'github-credential',
-                url: 'https://github.com/GROOM-PJT/BackEnd',
-                branch: 'develop'
+            url: 'https://github.com/GROOM-PJT/BackEnd',
+            branch: 'Test/Jenkins'
         }
         post {
                 failure {
@@ -41,6 +40,7 @@ pipeline {
         steps {
             echo 'Bulid Gradle'
             dir ('.'){
+                // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
                 sh """
                 chmod +x gradlew
                 ./gradlew clean build --exclude-task test
@@ -50,39 +50,44 @@ pipeline {
         post {
             failure {
                 error 'This pipeline stops gradle Jar Build'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Gradle Build Failure!\n==================================================================\n"
+                )
             }
             success {
-                    echo 'Gradle Build Success!'
-                    slackSend (
-                        channel: SLACK_CHANNEL,
-                        color: SLACK_SUCCESS_COLOR,
-                        message: "==================================================================\nGradle Build Success!\n==================================================================\n"
-                    )
-                }
+                echo 'Gradle Build Success!'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "Gradle Build Success!\n"
+                )
+            }
         }
     }
 
     stage('Docker Image Build') {
     agent any
         steps {
-            // script {
-            //     dockerImage = docker.build dockerHubRegistry + ":${currentBuild.number}" 
-            // }
-            sh "cp ./build/libs/*SHOT.jar ./"
-            // dockerImage = docker.build dockerHubRegistry + ":"+${currentBuild.number} 
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
             sh "docker build . -t ${dockerHubRegistry}:latest "
         }
         post {
             failure {
                 echo 'Docker image build failure !'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Docker Image build Failure!\n==================================================================\n"
+                )
             }
             success {
                 echo 'Docker image build success !'
                 slackSend (
                     channel: SLACK_CHANNEL,
                     color: SLACK_SUCCESS_COLOR,
-                    message: "==================================================================\nDocker Image Build Success!\n==================================================================\n"
+                    message: "Docker Image Build Success!\n"
                 )
             }
         }
@@ -90,54 +95,72 @@ pipeline {
 
     stage('Docker Image Push') {
         steps {
-            // withDockerRegistry([ credentialsId: dockerHubRegistryCredential, url: "" ]) {
-            //                     // sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
-            //                     // sh "docker push ${dockerHubRegistry}:latest"
-            //                     dockerImage.push()
-            //                     sleep 20 /* Wait uploading */ 
-            //                 }
-            script {
-                docker.withRegistry( '', dockerHubRegistryCredential ) {
-                    dockerImage.push()
-                }
+            sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
+            sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
+            sh ("docker push ${dockerHubRegistry}:lastest")
+            }
+        post {
+            failure {
+                echo 'Docker Image Push failure !'
+                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+                sh "docker rmi ${dockerHubRegistry}:latest"
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "Docker Image Push Failure!\n==================================================================\n"
+                )
+            }
+            success {
+                echo 'Docker image push success !'
+                sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+                sh "docker rmi ${dockerHubRegistry}:latest"
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "Docker Image Push Success!\n"
+                )
             }
         }
-        post {
-                failure {
-                  echo 'Docker Image Push failure !'
-                  sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                  sh "docker rmi ${dockerHubRegistry}:latest"
-                }
-                success {
-                  echo 'Docker image push success !'
-                  sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-                  sh "docker rmi ${dockerHubRegistry}:latest"
-                }
-        }
     }
 
-    stage('K8S Manifest Update') {
+    
+
+    stage('GitOps Repository Update Success ') {
         steps {
             git credentialsId: 'github-credential',
-                url: 'https://github.com/GROOM-PJT/gitOps.git',
-                branch: 'main'
+            url: 'https://github.com/GROOM-PJT/gitOps',
+            branch: 'main'
+            withCredentials([usernamePassword(credentialsId: 'github-credential', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]){
+            sh("""
+                pwd
+                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
+                git checkout main
+                sed -i 's/groom_backend:*[0-9]\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+                git commit -am  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                git push origin main
+            """)
+            }
 
-            sh "sed -i 'jeeseob/gromm_beckend:.*\$jeeseob/gromm_beckend:${currentBuild.number}/g' deployment.yaml"
-            sh "git add deployment.yaml"
-            sh "git commit -m '[UPDATE] groom-devOps-BE-reservation ${currentBuild.number} image versioning'"
-            sshagent(credentials: ['github-credential']) {
-                sh "git remote set-url origin git@github.com:GROOM-PJT/gitOps.git"
-                sh "git push -u origin main"
-             }
         }
         post {
-                failure {
-                  echo 'K8S Manifest Update failure !'
-                }
-                success {
-                  echo 'K8S Manifest Update success !'
-                }
+            failure {
+                echo 'GitOps Repository Update Success !'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "GitOps Repository Update Success!\n==================================================================\n"
+                )
+            }
+            success {
+                echo 'K8S Manifest Update success !'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "GitOps Repository Update Success!\n==================================================================\n"
+                )
+            }
         }
     }
-  }
 }
+}
+
