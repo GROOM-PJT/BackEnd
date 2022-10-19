@@ -7,28 +7,44 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
 @Setter
 @Builder
 public class RestaurantResponse {
-    // 식당 정보
-    private Long id;
+    private Long id;                // 식당 ID
 
-    // 이름
-    private String name;
+    private String name;            // 이름
 
-    // 설명
-    private String description;
+    private String theme;           // 테마
 
-    // 테마
-    private String theme;
+    private String description;     // 설명
 
-    private String imageUrl;
+    private String imageUrl;        // image URL
 
-    private int availableCount;
+    private int availableTime;      // 예약 가능 시간
+
+    private int availableCount;     // 예약 가능 인원
+
+    private String holiday;         // 휴일(쉬는 요일) 단순 텍스트로
+
+    // Location
+    private String province;        // 도, 시(특별시, 광역시)
+    private String city;            // 시, 군, 구
+    private String detailAddress;   // 상세 주소
+
+    // 영업시작 시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime openTime;
+
+    // 영업종료 시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime closeTime;
+
 
     public Restaurant toEntity() {
         return  Restaurant.builder()
@@ -40,8 +56,4 @@ public class RestaurantResponse {
                 .availableCount(this.availableCount)
                 .build();
     }
-    // 위치 정보
-    // 이미지
-    // 메뉴
-    // private List<MenuResponse> menuResponseList;
 }

@@ -1,5 +1,6 @@
 package com.goorm.baromukja.dto.reservation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.goorm.baromukja.entity.Reservation;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class ReservationRequest {
     private String comment;
 
     // 예약 시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reservationTime;
 
     // 예약 신청 시간

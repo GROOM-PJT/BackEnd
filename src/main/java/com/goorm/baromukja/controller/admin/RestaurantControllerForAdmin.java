@@ -7,10 +7,8 @@ import com.goorm.baromukja.baseUtil.response.dto.CommonResponse;
 import com.goorm.baromukja.baseUtil.response.service.ResponseService;
 import com.goorm.baromukja.dto.Menu.MenuDto;
 import com.goorm.baromukja.dto.Menu.MenuRequest;
-import com.goorm.baromukja.dto.Menu.MenuResponse;
 import com.goorm.baromukja.dto.member.MemberResponse;
 import com.goorm.baromukja.dto.restaurant.*;
-import com.goorm.baromukja.entity.MemberRole;
 import com.goorm.baromukja.service.MemberService;
 import com.goorm.baromukja.service.MenuServiceImpl;
 import com.goorm.baromukja.service.RestaurantServiceImpl;
@@ -19,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +40,7 @@ public class RestaurantControllerForAdmin {
     @ApiOperation(value = "식당 정보 추가", notes = "식당 정보를 추가")
     @PostMapping("/add")
     public CommonResponse addRestaurant(HttpServletRequest request,
+                                        @DateTimeFormat(pattern = "HH:mm:ss")
                                         @RequestBody RestaurantRequest restaurant) {
         // TODO: 이후에 api version을 3로 변경하면, Admin만 접근 가능하도록 설정됨
         String userName = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
