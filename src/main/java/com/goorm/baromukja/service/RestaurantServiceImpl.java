@@ -90,5 +90,21 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .stream().map(Restaurant::toResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestaurantResponse> findAllByTheme(String theme) {
+        return restaurantRepository.findAllByTheme(theme)
+                .stream().map(Restaurant::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestaurantResponse> findAllByProvince(String province) {
+        return restaurantRepository.findAllByProvince(province)
+                .stream().map(Restaurant::toResponse)
+                .collect(Collectors.toList());
+    }
 }
 

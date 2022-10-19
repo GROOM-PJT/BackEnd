@@ -42,13 +42,26 @@ public class RestaurantController {
 
     @ApiOperation(value = "식당 리스트", notes = "식당 리스트")
     @GetMapping("/all")
-    public ListResponse<RestaurantResponse> findById(HttpServletRequest request) {
+    public ListResponse<RestaurantResponse> findAll(HttpServletRequest request) {
         return responseService.listResult(restaurantService.findAll());
     }
 
     /**
-     * TODO : restaurantId를 받아 메뉴를 가져오는 controller 필요
      * TODO : 지역별, 분류별 식당 리스트 controller 필요
      */
+    @ApiOperation(value = "식당 리스트(지역별)", notes = "식당 리스트")
+    @GetMapping("/list/{location}")
+    public ListResponse<RestaurantResponse> findAllByProvince(HttpServletRequest request,
+                                                           @PathVariable String location) {
+        return responseService.listResult(restaurantService.findAllByProvince(location));
+    }
+
+    @ApiOperation(value = "식당 리스트(분류별)", notes = "식당 리스트")
+    @GetMapping("/list/{thema}")
+    public ListResponse<RestaurantResponse> findAllByTheme(HttpServletRequest request,
+                                                        @PathVariable String theme) {
+        return responseService.listResult(restaurantService.findAllByTheme(theme));
+    }
+
 
 }

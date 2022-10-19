@@ -13,6 +13,10 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     List<Restaurant> findAll();
 
+    List<Restaurant> findAllByTheme(String theme);
+
+    List<Restaurant> findAllByProvince(String province);
+
     Restaurant save(Restaurant restaurant);
 
     void deleteById(Long id);

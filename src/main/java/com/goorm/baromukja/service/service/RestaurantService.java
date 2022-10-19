@@ -22,5 +22,8 @@ public interface RestaurantService {
 
     List<RestaurantResponse> findAll();
 
+    List<RestaurantResponse> findAllByTheme(String theme);
+
+    List<RestaurantResponse> findAllByProvince(String province);
 
 }
