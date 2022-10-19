@@ -8,9 +8,12 @@ import com.goorm.baromukja.baseUtil.response.service.ResponseService;
 import com.goorm.baromukja.dto.Menu.MenuDto;
 import com.goorm.baromukja.dto.Menu.MenuRequest;
 import com.goorm.baromukja.dto.Menu.MenuResponse;
+import com.goorm.baromukja.dto.location.LocationDto;
+import com.goorm.baromukja.dto.location.LocationRequest;
 import com.goorm.baromukja.dto.member.MemberResponse;
 import com.goorm.baromukja.dto.restaurant.*;
 import com.goorm.baromukja.entity.MemberRole;
+import com.goorm.baromukja.service.LocationServiceImpl;
 import com.goorm.baromukja.service.MemberService;
 import com.goorm.baromukja.service.MenuServiceImpl;
 import com.goorm.baromukja.service.RestaurantServiceImpl;
@@ -37,6 +40,7 @@ public class RestaurantControllerForAdmin {
     private final MenuServiceImpl menuService;
     private final JwtService jwtService;
     private final AwsS3Service awsS3Service;
+    private final LocationServiceImpl locationService;
 
     @ApiOperation(value = "식당 정보 추가", notes = "식당 정보를 추가")
     @PostMapping("/add")
@@ -108,6 +112,22 @@ public class RestaurantControllerForAdmin {
             String imageUrl = awsS3Service.uploadFile(image);
             menuService.addImage(imageUrl, menuId);
             return responseService.successResult();
+        }
+        return responseService.failResult(ExMessage.NO_AUTHORITY.getMessage());
+    }
+
+    @ApiOperation(value = "위치 추가", notes = "위치 정보 추가")
+    @PostMapping(value = "/location/add/{restaurantId}")
+    public CommonResponse addLocation(HttpServletRequest request,
+                                      @PathVariable Long restaurantId,
+                                      @RequestBody LocationRequest locationRequest) {
+        log.info("ADD Location: " + locationRequest.toString());
+        RestaurantResponseWithMember restaurantResponse = restaurantService.findByIdWithMember(restaurantId);
+        log.info(restaurantResponse.toString());
+        String userName = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
+        if (restaurantResponse.getUsername().equals(userName)) {
+            LocationDto locationDto = locationService.save(locationRequest, restaurantId);
+            return responseService.singleResult(locationDto);
         }
         return responseService.failResult(ExMessage.NO_AUTHORITY.getMessage());
     }
