@@ -18,7 +18,7 @@ public class ReservationResponseWithUsername {
     private Long id;
 
     // 예약 날짜
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reservationTime;
 
     // 예약 추가 요청 사항
