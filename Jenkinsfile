@@ -41,8 +41,6 @@ pipeline {
    stage('Gradle Jar Build') {
     agent any
         steps {
-            sh ("gpg --batch --import $gpg_secret")
-            sh ("gpg --import-ownertrust $gpg_trust")
             sh ("git secret reveal -p '$gpg_passphrase'")
             sh ("cat ./src/main/resoures/application-pri.yaml")
          
