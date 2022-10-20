@@ -50,8 +50,7 @@ pipeline {
                 gpg --batch --import $gpg_secret
                 gpg --import-ownertrust $gpg_trust
                 git secret reveal -p '$gpg_passphrase'
-                git secret cat application-pri.yaml
-                cp ./application-pri.yaml ./src/main/resoures
+                git secret cat ./src/main/resoures/application-pri.yaml
             """
             echo 'Bulid Gradle'
             dir ('.'){
