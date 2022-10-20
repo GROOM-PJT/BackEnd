@@ -25,7 +25,7 @@ pipeline {
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/BackEnd',
             branch: 'main'
-        post {
+            post {
                 failure {
                   echo 'Repository clone failure !'
                 }
@@ -37,7 +37,7 @@ pipeline {
                         message: "==================================================================\n배포 파이프라인이 시작되었습니다.\n${GIT_COMMIT_AUTHOR} - ${GIT_COMMIT_MESSAGE}\n==================================================================\n"
                     )
                 }
-            }   
+            }    
         }
     }
 
