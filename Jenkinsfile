@@ -41,8 +41,8 @@ pipeline {
    stage('Gradle Jar Build') {
     agent any
         steps {
-            sh ("git secret reveal -p '$gpg_passphrase'")
-            sh ("cat ./src/main/resoures/application-pri.yaml")
+            sh ('git secret reveal -p \'$gpg_passphrase\'')
+            sh ('cat ./src/main/resoures/application-pri.yaml')
          
             echo 'Bulid Gradle'
             dir ('.'){
