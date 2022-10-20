@@ -36,3 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 application-pri.yaml
+.gitsecret/keys/random_seed
+!*.secret
