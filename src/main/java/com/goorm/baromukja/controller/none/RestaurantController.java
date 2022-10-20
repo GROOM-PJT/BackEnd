@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,16 +47,16 @@ public class RestaurantController {
      * TODO : 지역별, 분류별 식당 리스트 controller 필요
      */
     @ApiOperation(value = "식당 리스트(지역별)", notes = "식당 리스트")
-    @GetMapping("/list/{location}")
+    @GetMapping("/location/list")
     public ListResponse<RestaurantResponse> findAllByProvince(HttpServletRequest request,
-                                                           @PathVariable String location) {
+                                                           @RequestParam String location) {
         return responseService.listResult(restaurantService.findAllByProvince(location));
     }
 
     @ApiOperation(value = "식당 리스트(분류별)", notes = "식당 리스트")
-    @GetMapping("/list/{thema}")
+    @GetMapping("/theme/list")
     public ListResponse<RestaurantResponse> findAllByTheme(HttpServletRequest request,
-                                                        @PathVariable String theme) {
+                                                        @RequestParam String theme) {
         return responseService.listResult(restaurantService.findAllByTheme(theme));
     }
 

@@ -68,17 +68,17 @@ public class Restaurant {
                 .theme(this.theme)
                 .description(this.description)
                 .imageUrl(this.imageUrl)
-                .openTime(this.openTime)
-                .closeTime(this.closeTime)
+                .holiday(this.holiday)
 
-                // 프론트엔드에서 처리에 필요한 정보
                 .availableTime(this.availableTime)
                 .availableCount(this.availableCount)
 
-                // Location
                 .province(this.province)
                 .city(this.city)
                 .detailAddress(this.detailAddress)
+
+                .openTime(this.openTime)
+                .closeTime(this.closeTime)
 
                 // 메뉴
                 .menu(menu.stream().map(Menu::toResponse).collect(Collectors.toList()))
@@ -104,23 +104,22 @@ public class Restaurant {
 
     public RestaurantResponse toResponse() {
         return RestaurantResponse.builder()
-                // 기본 정보
                 .id(this.id)
                 .name(this.name)
                 .theme(this.theme)
                 .description(this.description)
                 .imageUrl(this.imageUrl)
-                .openTime(this.openTime)
-                .closeTime(this.closeTime)
+                .holiday(this.holiday)
 
-                // 프론트엔드에서 처리에 필요한 정보
                 .availableTime(this.availableTime)
                 .availableCount(this.availableCount)
 
-                // Location
                 .province(this.province)
                 .city(this.city)
                 .detailAddress(this.detailAddress)
+
+                .openTime(this.openTime)
+                .closeTime(this.closeTime)
                 .build();
     }
 }

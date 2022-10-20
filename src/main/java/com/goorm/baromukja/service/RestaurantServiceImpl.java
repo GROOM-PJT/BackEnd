@@ -70,7 +70,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public void addImageUrl(Long restaurantId, String imageUrl) {
-        Restaurant restaurant = this.findByIdDto(restaurantId).toEntity();
+        Restaurant restaurant = restaurantRepositoryCustom.findByIdForImage(restaurantId);
         restaurant.setImageUrl(imageUrl);
         restaurantRepository.save(restaurant);
     }

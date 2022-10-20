@@ -2,10 +2,7 @@ spring:
   config:
     activate:
       on-profile: rds
-  session:
-    store-type: jdbc
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    properties:
+    database-platform: org.hibernate.dialect.MariaDB106Dialect
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver

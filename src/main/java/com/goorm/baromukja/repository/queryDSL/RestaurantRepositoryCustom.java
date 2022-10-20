@@ -39,4 +39,13 @@ public class RestaurantRepositoryCustom {
         assert restaurant != null;
         return restaurant.toResponseDetail();
     }
+
+    public Restaurant findByIdForImage(Long restuarantId) {
+        QRestaurant qRestaurant = QRestaurant.restaurant;
+        return jpaQueryFactory
+                .selectFrom(qRestaurant)
+                .join(qRestaurant.member)
+                .where(qRestaurant.id.eq(restuarantId))
+                .fetchOne();
+    }
 }

@@ -35,9 +35,9 @@ public class NotificationService {
     public SseEmitter subscribe(String username) {
         String id = username + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
-        emitter.onCompletion(() -> emitterRepository.deleteById(id));
-        emitter.onTimeout(() -> emitterRepository.deleteById(id));
-        sendToClient(emitter, id, "EventStream Created. [userId=" + username + "]");
+//        emitter.onCompletion(() -> emitterRepository.deleteById(id));
+//        emitter.onTimeout(() -> emitterRepository.deleteById(id));
+//        sendToClient(emitter, id, "EventStream Created. [userId=" + username + "]");
         return emitter;
     }
 

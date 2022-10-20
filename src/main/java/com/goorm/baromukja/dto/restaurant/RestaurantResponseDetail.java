@@ -42,6 +42,8 @@ public class RestaurantResponseDetail {
     private String city;            // 시, 군, 구
     private String detailAddress;   // 상세 주소
 
+
+
     // 영업시작 시간
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime openTime;
