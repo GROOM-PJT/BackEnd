@@ -47,12 +47,11 @@ pipeline {
             expression { return params.current_status == "closed" && params.merged == true }
         }
         steps {
-            sh """
-                gpg --batch --import $gpg_secret
-                gpg --import-ownertrust $gpg_trust
-                git secret reveal -p '$gpg_passphrase'
-                git secret cat ./src/main/resoures/application-pri.yaml
-            """
+            sh ("gpg --batch --import $gpg_secret")
+            sh ("gpg --import-ownertrust $gpg_trust")
+            sh ("git secret reveal -p '$gpg_passphrase'")
+            sh ("git secret cat ./src/main/resoures/application-pri.yaml")
+         
             echo 'Bulid Gradle'
             dir ('.'){
                 // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
