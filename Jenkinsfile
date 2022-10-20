@@ -9,9 +9,9 @@ pipeline {
   }
   stages {
     stage('Checkout Application Git Branch') {
-        when {
-            expression { return params.current_status == "closed" && params.merged == true }
-        }
+        // when {
+        //     expression { return params.current_status == "closed" && params.merged == true && env.GIT_BRANCH == "origin/main" }
+        // }
         steps {
            script {
                     SLACK_CHANNEL = "jenkins"
@@ -50,11 +50,10 @@ pipeline {
             sh ("gpg --batch --import $gpg_secret")
             sh ("gpg --import-ownertrust $gpg_trust")
             sh ("git secret reveal -p '$gpg_passphrase'")
-            sh ("git secret cat ./src/main/resoures/application-pri.yaml")
+            sh ("cat ./src/main/resoures/application-pri.yaml")
          
             echo 'Bulid Gradle'
             dir ('.'){
-                // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
                 sh """
                 chmod +x gradlew
                 ./gradlew clean build --exclude-task test
