@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,13 +39,26 @@ public class RestaurantController {
 
     @ApiOperation(value = "식당 리스트", notes = "식당 리스트")
     @GetMapping("/all")
-    public ListResponse<RestaurantResponse> findById(HttpServletRequest request) {
+    public ListResponse<RestaurantResponse> findAll(HttpServletRequest request) {
         return responseService.listResult(restaurantService.findAll());
     }
 
     /**
-     * TODO : restaurantId를 받아 메뉴를 가져오는 controller 필요
      * TODO : 지역별, 분류별 식당 리스트 controller 필요
      */
+    @ApiOperation(value = "식당 리스트(지역별)", notes = "식당 리스트")
+    @GetMapping("/location/list")
+    public ListResponse<RestaurantResponse> findAllByProvince(HttpServletRequest request,
+                                                           @RequestParam String location) {
+        return responseService.listResult(restaurantService.findAllByProvince(location));
+    }
+
+    @ApiOperation(value = "식당 리스트(분류별)", notes = "식당 리스트")
+    @GetMapping("/theme/list")
+    public ListResponse<RestaurantResponse> findAllByTheme(HttpServletRequest request,
+                                                        @RequestParam String theme) {
+        return responseService.listResult(restaurantService.findAllByTheme(theme));
+    }
+
 
 }

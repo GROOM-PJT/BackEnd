@@ -70,7 +70,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public void addImageUrl(Long restaurantId, String imageUrl) {
-        Restaurant restaurant = this.findByIdDto(restaurantId).toEntity();
+        Restaurant restaurant = restaurantRepositoryCustom.findByIdForImage(restaurantId);
         restaurant.setImageUrl(imageUrl);
         restaurantRepository.save(restaurant);
     }
@@ -87,6 +87,22 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public List<RestaurantResponse> findAll() {
         return restaurantRepository.findAll()
+                .stream().map(Restaurant::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestaurantResponse> findAllByTheme(String theme) {
+        return restaurantRepository.findAllByTheme(theme)
+                .stream().map(Restaurant::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestaurantResponse> findAllByProvince(String province) {
+        return restaurantRepository.findAllByProvince(province)
                 .stream().map(Restaurant::toResponse)
                 .collect(Collectors.toList());
     }

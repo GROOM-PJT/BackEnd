@@ -28,20 +28,20 @@ public class RestaurantRequest {
     private String holiday;         // 휴일(쉬는 요일) 단순 텍스트로
 
     // Location
-    @ApiModelProperty(required = true, value = "도/시", example = "서울시")
+    @ApiModelProperty(value = "도/시", example = "서울시")
     private String province;        // 도, 시(특별시, 광역시)
-    @ApiModelProperty(required = true, value = "시/군/구", example = "종로구")
+    @ApiModelProperty(value = "시/군/구", example = "종로구")
     private String city;            // 시, 군, 구
-    @ApiModelProperty(required = true, value = "상세 주소", example = "호호식당 1층")
+    @ApiModelProperty(value = "상세 주소", example = "호호식당 1층")
     private String detailAddress;   // 상세 주소
 
     // 영업시작 시간
-    @ApiModelProperty(required = true, value = "오픈 시간", example = "10:00:00")
+    @ApiModelProperty(value = "오픈 시간", example = "10:00:00")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime openTime;
 
     // 영업종료 시간
-    @ApiModelProperty(required = true, value = "마감 시간", example = "20:00:00")
+    @ApiModelProperty(value = "마감 시간", example = "20:00:00")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime closeTime;
 
@@ -49,13 +49,19 @@ public class RestaurantRequest {
     public Restaurant toEntity() {
         return Restaurant.builder()
                 .name(this.name)
-                .availableTime(this.availableTime)
                 .theme(this.theme)
+                .description(this.description)
+                .holiday(this.holiday)
+
+                .availableTime(this.availableTime)
+                .availableCount(this.availableCount)
+
+                .province(this.province)
+                .city(this.city)
+                .detailAddress(this.detailAddress)
+
                 .openTime(this.openTime)
                 .closeTime(this.closeTime)
-                .description(this.description)
-                .availableCount(this.availableCount)
-                .holiday(this.holiday)
                 .build();
     }
 }

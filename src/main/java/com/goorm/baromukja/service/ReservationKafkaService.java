@@ -31,13 +31,8 @@ public class ReservationKafkaService {
 
     private final ReservationServiceImpl reservationService;
     private final RestaurantServiceImpl restaurantService;
-//    @KafkaHandler
-//    public void listData(@Payload List<ReservationRequest> reservations) {
-//        for(ReservationRequest reservation : reservations) {
-//            reservationService.save(reservation);
-//            log.info("Consumed Message List: " + reservation.toString());
-//        }
-//    }
+    private final NotificationService notificationService;
+
 
     @KafkaHandler
     public void singleData(@Payload ReservationRequest reservation) {
@@ -50,9 +45,13 @@ public class ReservationKafkaService {
             if(reservation.getNumberOfReservations() + canReservations <= availableCount) {
                 reservationService.save(reservation);
                 log.info("Consumed Message Single: " + reservation.toString());
+                notificationService.send(reservation.getUsername(), "reservation Success.");
+                log.info("예약 성공");
+                return;
             }
         }
-        // TODO: 예약 결과 보내기 (Push 메세지 "webSocket")
+        notificationService.send(reservation.getUsername(), "reservation Failure.");
+        log.info("예약 실패");
     }
 
     // ReservationRequest가 아닌 다른 object데이터가 존재하는 경우, 무시
