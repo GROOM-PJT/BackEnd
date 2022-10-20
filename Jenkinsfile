@@ -3,9 +3,9 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/groom_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
-    gpg_secret = credentials("github_secret")
-    gpg_trust = credentials("github_secret_owner")
-    gpg_passphrase = credentials("gpg-passphrase")
+    // gpg_secret = credentials("github_secret")
+    // gpg_trust = credentials("github_secret_owner")
+    // gpg_passphrase = credentials("gpg-passphrase")
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -42,8 +42,8 @@ pipeline {
     agent any
         steps {
             dir ('.'){
-                sh ('git secret reveal -p \'$gpg_passphrase\'')
-                sh ('cat ./src/main/resoures/application-pri.yaml')
+                // sh ('git secret reveal -p \'$gpg_passphrase\'')
+                // sh ('cat ./src/main/resoures/application-pri.yaml')
             
                 echo 'Bulid Gradle'
             
