@@ -10,7 +10,7 @@ public interface RestaurantService {
 
     RestaurantResponse findById(Long restauraintId);
 
-    RestaurantDto findByIdDto(Long restauraintId);
+    RestaurantDto findByIdDto(Long restaurantId);
 
     RestaurantResponseWithMember findByIdWithMember(Long restaurantId);
 
@@ -22,5 +22,8 @@ public interface RestaurantService {
 
     List<RestaurantResponse> findAll();
 
+    List<RestaurantResponse> findAllByTheme(String theme);
+
+    List<RestaurantResponse> findAllByProvince(String province);
 
 }

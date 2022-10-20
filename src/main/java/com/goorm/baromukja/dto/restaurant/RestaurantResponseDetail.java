@@ -1,10 +1,13 @@
 package com.goorm.baromukja.dto.restaurant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.goorm.baromukja.dto.Menu.MenuResponse;
 import com.goorm.baromukja.entity.Restaurant;
 import lombok.*;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -18,28 +21,36 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantResponseDetail {
-    // 식당 정보
-    private Long id;
+    private Long id;                // 식당 ID
 
-    //시작 시간
-    private LocalDateTime openTime;
+    private String name;            // 이름
 
-    //종료 시간
-    private LocalDateTime closeTime;
+    private String theme;           // 테마
 
-    //예약 가능 시간
-    private LocalDateTime availableTime;
+    private String description;     // 설명
 
-    // 이름
-    private String name;
+    private String imageUrl;        // image URL
 
-    // 설명
-    private String description;
+    private int availableTime;      // 예약 가능 시간
 
-    // 테마
-    private String theme;
+    private int availableCount;     // 예약 가능 인원
 
-    private String imageUrl;
+    private String holiday;         // 휴일(쉬는 요일) 단순 텍스트로
+
+    // Location
+    private String province;        // 도, 시(특별시, 광역시)
+    private String city;            // 시, 군, 구
+    private String detailAddress;   // 상세 주소
+
+
+
+    // 영업시작 시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime openTime;
+
+    // 영업종료 시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime closeTime;
 
     private List<MenuResponse> menu;
 

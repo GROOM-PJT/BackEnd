@@ -3,7 +3,6 @@ package com.goorm.baromukja.dto.restaurant;
 import com.goorm.baromukja.entity.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @Author : Jeeseob
@@ -13,17 +12,13 @@ import lombok.Setter;
 @Getter
 @Builder
 public class RestaurantDto {
-    // 식당 정보
-    private Long id;
+    private Long id;                // id
 
-    // 이름
-    private String name;
+    private String name;            // 이름
 
-    // 설명
-    private String description;
+    private String theme;           // 테마
 
-    // 테마
-    private String theme;
+    private String description;     // 설명
 
     public Restaurant toEntity() {
         return Restaurant.builder()

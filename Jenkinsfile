@@ -3,6 +3,9 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/groom_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
+    gpg_secret = credentials("github_secret")
+    gpg_trust = credentials("github_secret_owner")
+    gpg_passphrase = credentials("gpg-passphrase")
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -21,8 +24,7 @@ pipeline {
             }
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/BackEnd',
-            branch: 'Test/Jenkins'
-        }
+            branch: 'main'
         post {
                 failure {
                   echo 'Repository clone failure !'
@@ -44,6 +46,13 @@ pipeline {
             expression { return params.current_status == "closed" && params.merged == true }
         }
         steps {
+            sh """
+                gpg --batch --import $gpg_secret
+                gpg --import-ownertrust $gpg_trust
+                git secret reveal -p '$gpg_passphrase'
+                git secret cat application-pri.yaml
+                cp ./application-pri.yaml ./src/main/resoures
+            """
             echo 'Bulid Gradle'
             dir ('.'){
                 // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
