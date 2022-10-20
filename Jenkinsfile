@@ -41,11 +41,12 @@ pipeline {
    stage('Gradle Jar Build') {
     agent any
         steps {
-            sh ('git secret reveal -p \'$gpg_passphrase\'')
-            sh ('cat ./src/main/resoures/application-pri.yaml')
-         
-            echo 'Bulid Gradle'
             dir ('.'){
+                sh ('git secret reveal -p \'$gpg_passphrase\'')
+                sh ('cat ./src/main/resoures/application-pri.yaml')
+            
+                echo 'Bulid Gradle'
+            
                 sh """
                 chmod +x gradlew
                 ./gradlew clean build --exclude-task test
