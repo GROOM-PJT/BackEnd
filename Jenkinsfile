@@ -1,5 +1,8 @@
 pipeline {
   agent any
+    when {
+        expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/Reservation"}
+    }
   environment {
     dockerHubRegistry = 'jeeseob/baromukja_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
@@ -8,6 +11,7 @@ pipeline {
     gpg_passphrase = credentials("gpg-passphrase")
   }
   stages {
+    agent any
     stage('Checkout Application Git Branch') {
          when {
               expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
@@ -42,7 +46,6 @@ pipeline {
     }
 
     stage('get git secret'){
-    agent any
          when {
               expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
          }
@@ -72,7 +75,6 @@ pipeline {
     }
 
    stage('Gradle Jar Build') {
-    agent any
         when {
               expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
          }
@@ -107,7 +109,6 @@ pipeline {
     }
 
     stage('Docker Image Build') {
-    agent any
         when {
             expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
         }
