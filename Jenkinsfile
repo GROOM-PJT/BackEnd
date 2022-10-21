@@ -184,7 +184,7 @@ pipeline {
                 pwd
                 git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
                 git checkout main
-                sed -i 's/groom_backend:[0-9]*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+                sed -i 's/baromukja_backend:[0-9]*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
                 git add deployment.yaml
                 git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
                 git push origin main
