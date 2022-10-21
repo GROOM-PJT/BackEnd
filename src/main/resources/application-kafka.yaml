@@ -4,8 +4,6 @@ spring:
       on-profile: kafka
   kafka:
     consumer:
-      bootstrap-servers: ec2-43-200-239-121.ap-northeast-2.compute.amazonaws.com:9092
-      group-id: groom
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       auto-offset-reset: earliest
