@@ -44,8 +44,8 @@ pipeline {
             sh ("gpg --batch --import $gpg_secret")
             sh ("gpg --import-ownertrust $gpg_trust")
             sh ("git secret reveal -p '$gpg_passphrase'")
-            sh("pwd")
-            sh ("cat ./src/main/resource/application-pri.yaml")    
+            sh ("pwd")
+            sh ("cat src/main/resource/application-pri.yaml")    
         }
         post {
             failure {
