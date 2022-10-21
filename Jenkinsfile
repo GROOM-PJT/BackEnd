@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    dockerHubRegistry = 'jeeseob/groom_backend'
+    dockerHubRegistry = 'jeeseob/baromukja_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
     gpg_secret = credentials("github_secret")
     gpg_trust = credentials("github_secret_owner")
@@ -44,8 +44,6 @@ pipeline {
             sh ("gpg --batch --import $gpg_secret")
             sh ("gpg --import-ownertrust $gpg_trust")
             sh ("git secret reveal -p '$gpg_passphrase'")
-            sh ("pwd")
-            sh ("cat src/main/resources/application-pri.yaml")    
         }
         post {
             failure {
