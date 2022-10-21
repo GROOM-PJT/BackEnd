@@ -29,7 +29,6 @@ public class ReservationRequest {
     private String comment;
 
     // 예약 시간
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reservationTime;
 
     // 예약 신청 시간
