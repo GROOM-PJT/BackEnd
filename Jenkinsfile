@@ -1,14 +1,17 @@
 pipeline {
   agent any
   environment {
-    dockerHubRegistry = 'jeeseob/groom_backend'
+    dockerHubRegistry = 'jeeseob/baromukja_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
-    // gpg_secret = credentials("github_secret")
-    // gpg_trust = credentials("github_secret_owner")
-    // gpg_passphrase = credentials("gpg-passphrase")
+    gpg_secret = credentials("github_secret")
+    gpg_trust = credentials("github_secret_owner")
+    gpg_passphrase = credentials("gpg-passphrase")
   }
   stages {
     stage('Checkout Application Git Branch') {
+         when {
+              expression { return params.current_status == "closed" && params.merged == true }
+         }
         steps {
            script {
                     SLACK_CHANNEL = "jenkins"
@@ -21,8 +24,9 @@ pipeline {
             }
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/BackEnd',
-            branch: 'main'
-            post {
+            branch: 'Test/Jenkins'
+        }
+        post {
                 failure {
                   echo 'Repository clone failure !'
                 }
@@ -34,19 +38,48 @@ pipeline {
                         message: "==================================================================\n배포 파이프라인이 시작되었습니다.\n${GIT_COMMIT_AUTHOR} - ${GIT_COMMIT_MESSAGE}\n==================================================================\n"
                     )
                 }
-            }    
+        }
+    }
+
+    stage('get git secret'){
+    agent any
+         when {
+              expression { return params.current_status == "closed" && params.merged == true }
+         }
+        steps {
+            sh ("gpg --batch --import $gpg_secret")
+            sh ("gpg --import-ownertrust $gpg_trust")
+            sh ("git secret reveal -p '$gpg_passphrase'")
+        }
+        post {
+            failure {
+                error 'This pipeline stops get git secret'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "get git secret Failure!\n==================================================================\n"
+                )
+            }
+            success {
+                echo 'get git secret Success!'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "get git secret Success!\n"
+                )
+            }
         }
     }
 
    stage('Gradle Jar Build') {
     agent any
+        when {
+              expression { return params.current_status == "closed" && params.merged == true }
+         }
         steps {
+            echo 'Bulid Gradle'
             dir ('.'){
-                // sh ('git secret reveal -p \'$gpg_passphrase\'')
-                // sh ('cat ./src/main/resoures/application-pri.yaml')
-            
-                echo 'Bulid Gradle'
-            
+                // application-pri.yaml 추가하는 부분과 local을 RDS로 변경하는 등 몇가지 보완 필요.
                 sh """
                 chmod +x gradlew
                 ./gradlew clean build --exclude-task test
@@ -104,6 +137,9 @@ pipeline {
     }
 
     stage('Docker Image Push') {
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
             sh ("docker push ${dockerHubRegistry}:${currentBuild.number}")
@@ -136,6 +172,9 @@ pipeline {
     
 
     stage('GitOps Repository Update Success ') {
+        when {
+            expression { return params.current_status == "closed" && params.merged == true }
+        }
         steps {
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/gitOps',
@@ -174,5 +213,3 @@ pipeline {
     }
 }
 }
-
-
