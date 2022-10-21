@@ -99,9 +99,6 @@ pipeline {
 
     stage('Docker Image Build') {
     agent any
-        when {
-            expression { return params.current_status == "closed" && params.merged == true }
-        }
         steps {
             sh "id"
             sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
