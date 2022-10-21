@@ -3,6 +3,9 @@ pipeline {
   environment {
     dockerHubRegistry = 'jeeseob/groom_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
+    gpg_secret = credentials("github_secret")
+    gpg_trust = credentials("github_secret_owner")
+    gpg_passphrase = credentials("gpg-passphrase")
   }
   stages {
     stage('Checkout Application Git Branch') {
@@ -32,6 +35,34 @@ pipeline {
                         message: "==================================================================\n배포 파이프라인이 시작되었습니다.\n${GIT_COMMIT_AUTHOR} - ${GIT_COMMIT_MESSAGE}\n==================================================================\n"
                     )
                 }
+        }
+    }
+
+    stage('get git secret'){
+    agent any
+        steps {
+            sh ("gpg --batch --import $gpg_secret")
+            sh ("gpg --import-ownertrust $gpg_trust")
+            sh ("git secret reveal -p '$gpg_passphrase'")
+            sh ("cat ./src/main/resoures/application-pri.yaml")    
+        }
+        post {
+            failure {
+                error 'This pipeline stops get git secret'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_FAIL_COLOR,
+                    message: "get git secret Failure!\n==================================================================\n"
+                )
+            }
+            success {
+                echo 'get git secret Success!'
+                slackSend (
+                    channel: SLACK_CHANNEL,
+                    color: SLACK_SUCCESS_COLOR,
+                    message: "get git secret Success!\n"
+                )
+            }
         }
     }
 
