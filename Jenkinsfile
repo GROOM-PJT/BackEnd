@@ -24,7 +24,7 @@ pipeline {
             }
             git credentialsId: 'github-credential',
             url: 'https://github.com/GROOM-PJT/BackEnd',
-            branch: 'Test/Jenkins'
+            branch: 'main'
         }
         post {
                 failure {
