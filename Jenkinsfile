@@ -1,5 +1,8 @@
 pipeline {
   agent any
+    when {
+        expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/Reservation"}
+    }
   environment {
     dockerHubRegistry = 'jeeseob/baromukja_backend'
     DOCKERHUB_CREDENTIALS = credentials('docker-credential')
