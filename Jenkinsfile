@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Checkout Application Git Branch') {
          when {
-              expression { return params.current_status == "closed" && params.merged == true }
+              expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
          }
         steps {
            script {
@@ -44,7 +44,7 @@ pipeline {
     stage('get git secret'){
     agent any
          when {
-              expression { return params.current_status == "closed" && params.merged == true }
+              expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
          }
         steps {
             sh ("gpg --batch --import $gpg_secret")
@@ -74,7 +74,7 @@ pipeline {
    stage('Gradle Jar Build') {
     agent any
         when {
-              expression { return params.current_status == "closed" && params.merged == true }
+              expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
          }
         steps {
             echo 'Bulid Gradle'
@@ -109,7 +109,7 @@ pipeline {
     stage('Docker Image Build') {
     agent any
         when {
-            expression { return params.current_status == "closed" && params.merged == true }
+            expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
         }
         steps {
             sh "id"
@@ -138,7 +138,7 @@ pipeline {
 
     stage('Docker Image Push') {
         when {
-            expression { return params.current_status == "closed" && params.merged == true }
+            expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
         }
         steps {
             sh ("echo \\$DOCKERHUB_CREDENTIALS_PSW | docker login -u \\$DOCKERHUB_CREDENTIALS_USR --password-stdin")
@@ -173,7 +173,7 @@ pipeline {
 
     stage('GitOps Repository Update Success ') {
         when {
-            expression { return params.current_status == "closed" && params.merged == true }
+            expression { return params.current_status == "closed" && params.merged == true && params.repository == "GROOM-PJT/BackEnd"}
         }
         steps {
             git credentialsId: 'github-credential',
@@ -184,9 +184,9 @@ pipeline {
                 pwd
                 git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
                 git checkout main
-                sed -i 's/baromukja_backend:[0-9]*\$/groom_backend:${currentBuild.number}/g' deployment.yaml
+                sed -i 's/baromukja_backend:[0-9]*\$/baromukja_backend:${currentBuild.number}/g' deployment.yaml
                 git add deployment.yaml
-                git commit -m  "UPDATE: deployment-gromm_beckend ${currentBuild.number} image versioning"
+                git commit -m  "UPDATE: deployment-baromukja_backend ${currentBuild.number} image versioning"
                 git push origin main
             """)
             }
