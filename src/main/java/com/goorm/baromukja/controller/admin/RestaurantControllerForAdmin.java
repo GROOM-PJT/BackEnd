@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Api(tags = "04-1. 식당 - admin")
 @CrossOrigin
-@RequestMapping("api/v1/admin/restaurant")
+@RequestMapping("api/v1/restaurant/admin")
 @RestController
 @RequiredArgsConstructor
 public class RestaurantControllerForAdmin {

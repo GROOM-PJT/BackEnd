@@ -26,7 +26,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/member/admin")
 public class AdminCotroller {
 
     private final ReservationServiceImpl reservationService;

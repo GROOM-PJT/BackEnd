@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "03-2. 예약 - user")
 @CrossOrigin
-@RequestMapping("api/v1/user/reservation")
+@RequestMapping("api/v1/reservation/user")
 @RestController
 @RequiredArgsConstructor
 public class ReservationControllerForUser {
