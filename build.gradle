@@ -44,6 +44,7 @@ dependencies {
 	compileOnly 'org.springframework.boot:spring-boot-starter-aop'
 
 	// Database
+	implementation 'com.h2database:h2'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
 	// implementation 'org.springframework.session:spring-session-jdbc'
 
