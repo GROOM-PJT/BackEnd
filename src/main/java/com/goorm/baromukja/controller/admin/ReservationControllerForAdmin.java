@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @Api(tags = "03-1. 예약 - admin")
+@CrossOrigin
 @RequestMapping("api/v1/admin/reservation")
 @RestController
 @RequiredArgsConstructor
