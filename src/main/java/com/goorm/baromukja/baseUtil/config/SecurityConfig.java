@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 세션 사용 안함
 				.and()
-				// .addFilter(corsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
+				// .addFilter(CorsFilter) // 인증(O) security Filter에 등록 / @CrossOrigin : (Cors를 허용하지만, 인증 안된 요청은 거름)
 				.formLogin().disable() // Form login 안함
 				.httpBasic().disable()
 				.addFilter(jwtAuthenticationFilter())// 차단한 formLogin 대신 필터를 넣어준다. AuthenticationManager가 필요
