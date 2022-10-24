@@ -37,7 +37,7 @@ public class MemberController {
 
 
     @ApiOperation(value = "회원 가입", notes = "아이디, 패스워드를 받아서 저장합니다.")
-    @PostMapping
+    @PostMapping("/register")
     public CommonResponse saveUserMember(
             @ApiParam(value = "회원 객체", required = true)
             @RequestBody MemberSignupRequest memberSignupReq) {
@@ -46,7 +46,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "ADMIN 회원 가입", notes = "관리자 회원의 아이디, 패스워드를 받아서 저장합니다.")
-    @PostMapping("/admin")
+    @PostMapping("/admin/register")
     public CommonResponse saveAdminMember(
             @ApiParam(value = "Admin 회원 객체", required = true)
             @RequestBody MemberSignupRequest memberSignupReq) {
