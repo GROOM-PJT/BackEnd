@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user/member")
+@RequestMapping("/api/v1/member/user")
 public class MemberControllerForUser {
 
     private final ResponseService responseService;

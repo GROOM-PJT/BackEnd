@@ -3,6 +3,7 @@ package com.goorm.baromukja.controller.none;
 import com.goorm.baromukja.baseUtil.response.dto.ListResponse;
 import com.goorm.baromukja.baseUtil.response.dto.SingleResponse;
 import com.goorm.baromukja.baseUtil.response.service.ResponseService;
+import com.goorm.baromukja.dto.ListRequest;
 import com.goorm.baromukja.dto.restaurant.RestaurantResponse;
 import com.goorm.baromukja.dto.restaurant.RestaurantResponseDetail;
 import com.goorm.baromukja.service.RestaurantServiceImpl;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Author : Jeeseob
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Api(tags = "04. 식당")
+@CrossOrigin
 @RequestMapping("api/v1/restaurant")
 @RestController
 @RequiredArgsConstructor
@@ -38,9 +41,14 @@ public class RestaurantController {
 
 
     @ApiOperation(value = "식당 리스트", notes = "식당 리스트")
-    @GetMapping("/all")
-    public ListResponse<RestaurantResponse> findAll(HttpServletRequest request) {
-        return responseService.listResult(restaurantService.findAll());
+    @PostMapping("/all")
+    public ListResponse<RestaurantResponse> findAll(HttpServletRequest request,
+                                                    @RequestBody ListRequest listRequest) {
+        List<RestaurantResponse> restaurantResponseList = restaurantService.findAll();
+        if (restaurantResponseList.size() >= listRequest.getSkip() + listRequest.getLimit()) {
+            return responseService.listResult(restaurantResponseList.subList(listRequest.getSkip(), listRequest.getSkip() + listRequest.getLimit()));
+        }
+        return responseService.listResult(restaurantResponseList.subList(listRequest.getSkip(), restaurantResponseList.size()));
     }
 
     /**
