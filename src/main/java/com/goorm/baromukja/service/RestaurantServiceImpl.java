@@ -53,14 +53,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepositoryCustom.findByIdWithMember(restaurantId);
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public RestaurantResponseDetail findByIdDetail(Long restaurantId) {
-        log.info("restaurant - findByIdDetail: " + restaurantId);
-        return restaurantRepositoryCustom.findByIdWithMenu(restaurantId);
-    }
-
     @Override
     @Transactional
     public void delete(Long restaurantId) {

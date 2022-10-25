@@ -33,8 +33,7 @@ public class RestaurantResponse {
     private String holiday;         // 휴일(쉬는 요일) 단순 텍스트로
 
     // Location
-    private String province;        // 도, 시(특별시, 광역시)
-    private String city;            // 시, 군, 구
+    private String province;        // 검색 가능 주소(ㅇㅇ동)
     private String detailAddress;   // 상세 주소
 
     // 영업시작 시간
