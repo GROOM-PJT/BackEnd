@@ -1,8 +1,6 @@
 package com.goorm.baromukja.repository.queryDSL;
 
-import com.goorm.baromukja.dto.restaurant.RestaurantResponseDetail;
 import com.goorm.baromukja.dto.restaurant.RestaurantResponseWithMember;
-import com.goorm.baromukja.entity.QMenu;
 import com.goorm.baromukja.entity.QRestaurant;
 import com.goorm.baromukja.entity.Restaurant;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,18 +24,6 @@ public class RestaurantRepositoryCustom {
 
         assert restaurant != null;
         return restaurant.toResponseWithMember();
-    }
-
-    public RestaurantResponseDetail findByIdWithMenu(Long restaurantId) {
-        QRestaurant qRestaurant = QRestaurant.restaurant;
-        Restaurant restaurant = jpaQueryFactory
-                .selectFrom(qRestaurant)
-                .join(qRestaurant.menu).fetchJoin()
-                .where(qRestaurant.id.eq(restaurantId))
-                .fetchOne();
-
-        assert restaurant != null;
-        return restaurant.toResponseDetail();
     }
 
     public Restaurant findByIdForImage(Long restuarantId) {

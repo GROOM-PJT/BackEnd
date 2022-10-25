@@ -5,12 +5,9 @@ import com.goorm.baromukja.baseUtil.config.service.JwtService;
 import com.goorm.baromukja.baseUtil.exception.ExMessage;
 import com.goorm.baromukja.baseUtil.response.dto.CommonResponse;
 import com.goorm.baromukja.baseUtil.response.service.ResponseService;
-import com.goorm.baromukja.dto.Menu.MenuDto;
-import com.goorm.baromukja.dto.Menu.MenuRequest;
 import com.goorm.baromukja.dto.member.MemberResponse;
 import com.goorm.baromukja.dto.restaurant.*;
 import com.goorm.baromukja.service.MemberService;
-import com.goorm.baromukja.service.MenuServiceImpl;
 import com.goorm.baromukja.service.RestaurantServiceImpl;
 import com.goorm.baromukja.service.awsS3.AwsS3Service;
 import io.swagger.annotations.Api;
@@ -34,7 +31,6 @@ public class RestaurantControllerForAdmin {
     private final MemberService memberService;
     private final RestaurantServiceImpl restaurantService;
     private final ResponseService responseService;
-    private final MenuServiceImpl menuService;
     private final JwtService jwtService;
     private final AwsS3Service awsS3Service;
 
@@ -76,38 +72,6 @@ public class RestaurantControllerForAdmin {
         String userName = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
         if (restaurantResponse.getUsername().equals(userName)) {
             restaurantService.delete(restaurantId);
-            return responseService.successResult();
-        }
-        return responseService.failResult(ExMessage.NO_AUTHORITY.getMessage());
-    }
-
-    @ApiOperation(value = "메뉴 추가", notes = "메뉴 추가")
-    @PostMapping( "/menu/add/{restaurantId}")
-    public CommonResponse addMenuImage(HttpServletRequest request,
-                                        @PathVariable Long restaurantId,
-                                        @RequestBody MenuRequest menuRequest) {
-        log.info("ADD Menu: " + menuRequest.toString());
-        RestaurantResponseWithMember restaurantResponse = restaurantService.findByIdWithMember(restaurantId);
-        log.info(restaurantResponse.toString());
-        String userName = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
-        if (restaurantResponse.getUsername().equals(userName)) {
-            MenuDto menuDto = menuService.save(menuRequest, restaurantId);
-            return responseService.singleResult(menuDto);
-        }
-        return responseService.failResult(ExMessage.NO_AUTHORITY.getMessage());
-    }
-
-    @ApiOperation(value = "메뉴 이미지 추가", notes = "메뉴 이미지 추가")
-    @PostMapping(value = "/menu/addImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResponse addMenuImage(HttpServletRequest request,
-                                       @RequestParam Long menuId,
-                                       @RequestParam Long restaurantId,
-                                       @RequestPart("image") MultipartFile image) {
-        RestaurantResponseWithMember restaurantResponse = restaurantService.findByIdWithMember(restaurantId);
-        String userName = jwtService.decode(request.getHeader("Authorization").replace(JwtProperties.TOKEN_PREFIX, ""));
-        if (restaurantResponse.getUsername().equals(userName)) {
-            String imageUrl = awsS3Service.uploadFile(image);
-            menuService.addImage(imageUrl, menuId);
             return responseService.successResult();
         }
         return responseService.failResult(ExMessage.NO_AUTHORITY.getMessage());

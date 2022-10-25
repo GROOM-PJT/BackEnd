@@ -6,7 +6,6 @@ import com.goorm.baromukja.dto.restaurant.*;
 import java.util.List;
 
 public interface RestaurantService {
-    RestaurantResponseDetail findByIdDetail(Long restaurantId);
 
     RestaurantResponse findById(Long restauraintId);
 

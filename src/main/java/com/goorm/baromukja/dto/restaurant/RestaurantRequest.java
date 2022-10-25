@@ -28,10 +28,8 @@ public class RestaurantRequest {
     private String holiday;         // 휴일(쉬는 요일) 단순 텍스트로
 
     // Location
-    @ApiModelProperty(value = "도/시", example = "서울시")
+    @ApiModelProperty(value = "검색가능 주소", example = "안국동")
     private String province;        // 도, 시(특별시, 광역시)
-    @ApiModelProperty(value = "시/군/구", example = "종로구")
-    private String city;            // 시, 군, 구
     @ApiModelProperty(value = "상세 주소", example = "호호식당 1층")
     private String detailAddress;   // 상세 주소
 
@@ -57,7 +55,6 @@ public class RestaurantRequest {
                 .availableCount(this.availableCount)
 
                 .province(this.province)
-                .city(this.city)
                 .detailAddress(this.detailAddress)
 
                 .openTime(this.openTime)

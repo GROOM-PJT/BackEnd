@@ -5,7 +5,6 @@ import com.goorm.baromukja.baseUtil.response.dto.SingleResponse;
 import com.goorm.baromukja.baseUtil.response.service.ResponseService;
 import com.goorm.baromukja.dto.ListRequest;
 import com.goorm.baromukja.dto.restaurant.RestaurantResponse;
-import com.goorm.baromukja.dto.restaurant.RestaurantResponseDetail;
 import com.goorm.baromukja.service.RestaurantServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,9 +33,9 @@ public class RestaurantController {
 
     @ApiOperation(value = "식당 상세 정보", notes = "식당의 상세 정보를 조회")
     @GetMapping("/detail/{restaurantId}")
-    public SingleResponse<RestaurantResponseDetail> findById(HttpServletRequest request,
+    public SingleResponse<RestaurantResponse> findById(HttpServletRequest request,
                                                              @PathVariable Long restaurantId) {
-        return responseService.singleResult(restaurantService.findByIdDetail(restaurantId));
+        return responseService.singleResult(restaurantService.findById(restaurantId));
     }
 
 
