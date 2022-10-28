@@ -4,7 +4,7 @@ spring:
       on-profile: db
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
     open-in-view: false
     properties.hibernate:

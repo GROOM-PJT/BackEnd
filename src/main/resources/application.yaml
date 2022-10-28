@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: dev, kafka, aws, db, pri, rds
+    include: dev, kafka, aws, db, pri, local
 
   mvc:
     pathmatch:
